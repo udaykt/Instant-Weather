@@ -1,0 +1,208 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-image: url("/images/bg.jpg");
+  background-size: cover;
+  background-position: top center;
+  font-family: Gilroy-Bold;
+}
+
+.main-block {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.9)
+  );
+}
+header {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 50px 15px 15px;
+}
+.main-block input {
+  width: 100%;
+  max-width: 280px;
+  padding: 10px 15px;
+  border: none;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  vertical-align: auto;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #313131;
+  border-radius: 15px 15px 15px 15px;
+  font-family: Gilroy-Bold;
+  font-size: 18px;
+  font-weight: 500;
+  transition: 0.3 ease-out;
+}
+
+.main-block input:focus {
+  background-color: rgba(2555, 255, 255, 0.6);
+}
+
+.loc-date {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: space-around;
+  padding: 20px 15px 20px 15px;
+}
+main {
+  flex: 1 1 100%;
+  padding: 25px 25px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.location {
+  display: flex;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 500;
+  padding: 5px 10px;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.country {
+  padding-left: 5px;
+}
+.date-time {
+  display: flex;
+  justify-content: center;
+  padding: 5px 10px;
+}
+.date {
+  color: #fff;
+  font-size: 16px;
+}
+.time {
+  color: #fff;
+  padding-left: 5px;
+  font-size: 16px;
+}
+.temperature-degree {
+  color: #fff;
+  font-size: 60px;
+  background: none;
+  border: none;
+  display: inline-block;
+  width: 45px;
+  vertical-align: bottom;
+  text-shadow: 2px 2px 2px #000;
+  font-family: Gilroy-Heavy;
+}
+.temperature-degree:focus {
+  box-shadow: none;
+  outline: none;
+}
+.temperature-reading {
+  color: #fff;
+  font-size: 120px;
+  font-weight: 900;
+  font-family: Gilroy-Heavy;
+  text-shadow: 2px 5px rgba(0, 0, 0, 0.6);
+}
+.temperature-reading span {
+  font-weight: 500;
+}
+.temp-icon {
+  position: sticky;
+  width: 400px;
+  display: flex;
+  inline-size: auto;
+}
+.weather {
+  color: #fff;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  font-style: italic;
+  text-shadow: 0px 3px rgba(0, 0, 0, 0.4);
+  font-family: Gilroy-Medium;
+}
+.weather-icon {
+  align-content: space-around;
+  object-fit: contain;
+  padding-left: 20px;
+  padding-bottom: 50px;
+}
+.temperature-real-feel {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  text-shadow: 0px 4px rgba(0, 0, 0, 0.4);
+}
+
+.forecast {
+  width: 450px;
+  height: auto;
+  display: flex;
+  padding: 25px;
+  color: #fff;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 500;
+}
+.humidity-title {
+  width: 100px;
+  height: 0px;
+  background: transparent;
+  box-shadow: 0 25px 0 0 #fff;
+  padding-bottom: 3px;
+  border-radius: 10px;
+}
+.humidity-value {
+  padding-top: 30px;
+  font-size: 30px;
+  text-shadow: 0px 3px rgba(0, 0, 0, 0.4);
+}
+.wind-title {
+  width: 100px;
+  height: 0px;
+  background: transparent;
+  box-shadow: 0 25px 0 0 #fff;
+  padding-bottom: 3px;
+  border-radius: 10px;
+}
+.wind-value {
+  padding-top: 30px;
+  font-size: 30px;
+  text-shadow: 0px 3px rgba(0, 0, 0, 0.4);
+}
+.pressure-title {
+  width: 100px;
+  height: 0px;
+  background: transparent;
+  box-shadow: 0 25px 0 0 #fff;
+  padding-bottom: 3px;
+  border-radius: 10px;
+}
+.pressure-value {
+  padding-top: 30px;
+  font-size: 30px;
+  text-shadow: 0px 3px rgba(0, 0, 0, 0.4);
+}
+
+@font-face {
+  font-family: Gilroy-Heavy;
+  src: URL("/assets/fonts/Gilroy-Heavy.ttf") format("truetype");
+}
+@font-face {
+  font-family: Gilroy-Bold;
+  src: URL("/assets/fonts/Gilroy-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: Gilroy-Medium;
+  src: URL("/assets/fonts/Gilroy-Medium.ttf") format("truetype");
+}
