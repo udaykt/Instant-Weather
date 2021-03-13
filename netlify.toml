@@ -2,7 +2,6 @@
   command = "hugo"
   context = "production"
   publish = "public"
-  commandOrigin: "config"
 
 [context.production.environment]
   HUGO_VERSION = "0.80.0"
