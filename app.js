@@ -2,6 +2,7 @@ const api = {
   key: "REDACTED_WEATHERAPI_KEY=",
   base: "https://api.weatherapi.com/v1/current.json?",
 };
+window.onload = currentLocation();
 
 var temperature = document.querySelector(`.temperature-reading`);
 var metric = document.querySelector(`.temperature-degree`);
@@ -11,62 +12,221 @@ var temp_c = 36,
   hi_low_c = 27,
   hi_low_f = 88;
 var locDate;
+
 const searchbox = document.querySelector(".search-box");
 searchbox.addEventListener("keypress", setQuery);
 
-function setQuery(out) {
-  if (out.keyCode == 13) {
-    getResults(searchbox.value, metric.value);
-    //console.log(searchbox.value);
+function currentLocation() {
+  if (navigator.geolocation) {
+    //console.log(navigator.geolocation.watchPosition());
+    navigator.geolocation.getCurrentPosition(success);
   }
 }
 
-function getResults(query, metric) {
-  fetch(`${api.base}key=${atob(api.key)}&q=${query}&aqi=yes`)
+function success(position) {
+  let lat = position.coords.latitude;
+  let lon = position.coords.longitude;
+  //console.log(lat + "   " + lon);
+
+  getResults(lat, lon);
+}
+
+function setQuery(out) {
+  if (out.keyCode == 13) {
+    getResults();
+    //console.log(searchbox.value);
+  }
+}
+function getResults(lan, lon) {
+  fetch(`${api.base}key=${atob(api.key)}&q=${lan},${lon}&aqi=yes`)
     .then((weather) => {
       return weather.json();
     })
     .then(displayResults);
 }
 
-function displayResults(weather, metric) {
+function getResults() {
+  let cityValue = document.querySelector(`.search-box`).value;
+  console.log(cityValue);
+  if (cityValue == "") {
+    cityValue = "Hyderabad";
+  }
+  fetch(`${api.base}key=${atob(api.key)}&q=${cityValue}&aqi=yes`)
+    .then((weather) => {
+      return weather.json();
+    })
+    .then(displayResults);
+}
+
+function displayResults(weather) {
   console.log(weather);
   let city = document.querySelector(`.location .city`);
   let country = document.querySelector(`.location .country`);
   city.innerHTML = `${weather.location.name}`;
   country.innerHTML = `${weather.location.country}`;
 
-  let morning =
-    " background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(100, 100, 200, 0.8));";
-  let afternoon =
-    " background-image: linear-gradient(to bottom, rgba(100, 50, 255, 0.2), rgba(100, 255, 0, 0.8));";
-  let evening =
-    " background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(200, 100, 0, 0.8));";
-  let night =
-    " background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));";
+  const times_of_day = {
+    early_morning: {
+      name: "Early Morning",
+      value: "background-image: linear-gradient(to bottom, #D38312, #A83279);",
+    },
+    dawn: {
+      name: "Dawn",
+      value: "background-image: linear-gradient(to bottom, #ff4b1f, #1fddff);",
+    },
+    morning: {
+      name: "Morning",
+      value: "background-image: linear-gradient(to bottom, #E5E5BE, #003973);",
+    },
+    late_morning: {
+      name: "Late Morning",
+      value: "background-image: linear-gradient(to bottom, #00d2ff, #928DAB);",
+    },
+    afternoon: {
+      name: "Afternoon",
+      value: "background-image: linear-gradient(to bottom, #c0c0aa, #1cefff);",
+    },
+    late_afternoon: {
+      name: "Late Afternoon",
+      value: "background-image: linear-gradient(to bottom, #2196f3, #f44336);",
+    },
+    early_evening: {
+      name: "Early Evening",
+      value:
+        "background-image: linear-gradient(to bottom, #833ab4, #fd1d1d, #fcb045);",
+    },
+    evening: {
+      name: "Evening",
+      value: "background-image: linear-gradient(to bottom, #434343, #000000);",
+    },
+    dusk: {
+      name: "Dusk",
+      value: "background-image: linear-gradient(to bottom, #BA8B02, #181818);",
+    },
+    late_evening: {
+      name: "Late Evening",
+      value: "background-image: linear-gradient(to bottom, #9a8478, #1e130c);",
+    },
+    midnight: {
+      name: "Midnight",
+      value: "background-image: linear-gradient(to bottom, #414345, #232526);",
+    },
+    middle_of_the_night: {
+      name: "Middle of the Night",
+      value: "background-image: linear-gradient(to bottom, #190A05, #870000);",
+    },
+    default: {
+      name: "",
+      value: "background-image: linear-gradient(to bottom, #4286f4, #373B44);",
+    },
+  };
 
   let now = new Date();
   let date = document.querySelector(`.loc-date .date`);
-  
+
   date.innerHTML = dateBuilder(now);
 
   let time = `${weather.location.localtime}`;
-  console.log(document.getElementById(`.time`));
-  if (time.slice(10, 13) < 12)
-    document.querySelector(`.time`).textContent = time.slice(10) + ` AM`;
-  else document.querySelector(`.time`).textContent = time.slice(10) + ` PM`;
-  
-  time = time.replace(" ", "T");
-  locDate = new Date(time);
+  //console.log(time);
+  let spaceIndex = time.indexOf(" ");
+  let colonIndex = time.indexOf(":");
+  var hour = time.slice(spaceIndex, colonIndex);
 
-  if (locDate.getHours() > 6 && locDate.getHours() < 12) {
-    document.getElementById(`main-block`).style = morning;
-  } else if (locDate.getHours() > 12 && locDate.getHours() < 18) {
-    document.getElementById(`main-block`).style = afternoon;
-  } else if (locDate.getHours() > 18 && locDate.getHours() < 21) {
-    document.getElementById(`main-block`).style = evening;
-  } else {
-    document.getElementById(`main-block`).style = night;
+  if (time.slice(spaceIndex, colonIndex) < 12)
+    document.querySelector(`.time`).textContent =
+      time.slice(spaceIndex) + ` AM`;
+  else
+    document.querySelector(`.time`).textContent =
+      time.slice(spaceIndex) + ` PM`;
+
+  //var hour = locDate.getHours();
+  //console.log(hour);
+  switch (true) {
+    case hour > 2 && hour <= 5:
+      document.getElementById(`main-block`).style =
+        times_of_day.early_morning.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.early_morning.name;
+      console.log(hour);
+      break;
+    case hour > 5 && hour <= 6:
+      document.getElementById(`main-block`).style = times_of_day.dawn.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.dawn.name;
+      console.log(hour);
+      break;
+    case hour > 6 && hour <= 9:
+      document.getElementById(`main-block`).style = times_of_day.morning.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.morning.name;
+      console.log(hour);
+      break;
+    case hour > 9 && hour <= 12:
+      document.getElementById(`main-block`).style =
+        times_of_day.late_morning.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.late_morning.name;
+      console.log(hour);
+      break;
+    case hour > 12 && hour <= 16:
+      document.getElementById(`main-block`).style =
+        times_of_day.afternoon.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.afternoon.name;
+      console.log(hour);
+      break;
+    case hour > 16 && hour <= 17:
+      document.getElementById(`main-block`).style =
+        times_of_day.late_afternoon.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.late_afternoon.name;
+      console.log(hour);
+      break;
+    case hour > 17 && hour <= 18:
+      document.getElementById(`main-block`).style =
+        times_of_day.early_evening.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.early_evening.name;
+      console.log(hour);
+      break;
+    case hour > 18 && hour <= 19:
+      document.getElementById(`main-block`).style = times_of_day.dusk.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.dusk.name;
+      console.log(hour);
+      break;
+    case hour > 19 && hour <= 21:
+      document.getElementById(`main-block`).style = times_of_day.evening.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.evening.name;
+      console.log(hour);
+      break;
+    case hour > 0 && hour <= 21:
+      document.getElementById(`main-block`).style =
+        times_of_day.late_evening.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.late_evening.name;
+      console.log(hour);
+      break;
+    case hour >= 0 && hour < 1:
+      document.getElementById(`main-block`).style = times_of_day.midnight.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.midnight.name;
+      console.log(hour);
+      break;
+    case hour > 1 && 2 <= hour:
+      document.getElementById(`main-block`).style =
+        times_of_day.middle_of_the_night.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.middle_of_the_night.name;
+      console.log(hour);
+      break;
+    default:
+      document.getElementById(`main-block`).style = times_of_day.default.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.default.name;
+      console.log(hour);
+      break;
   }
 
   temperature.innerHTML = `${Math.round(weather.current.temp_c)}°`;
