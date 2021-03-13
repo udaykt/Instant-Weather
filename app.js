@@ -70,7 +70,7 @@ function displayResults(weather, metric) {
   temperature.innerHTML = `${Math.round(weather.current.temp_c)}°`;
   temp_c = `${Math.round(weather.current.temp_c)}`;
   temp_f = `${Math.round(weather.current.temp_f)}`;
-  
+
   let weather_condition = document.querySelector(`.weather-description`);
   weather_condition.innerHTML = `${weather.current.condition.text}`;
 
