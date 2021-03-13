@@ -47,7 +47,7 @@ function displayResults(weather, metric) {
 
   let now = new Date();
   let date = document.querySelector(`.loc-date .date`);
-  //console.log(date.value);
+  
   date.innerHTML = dateBuilder(now);
 
   let time = `${weather.location.localtime}`;
@@ -55,8 +55,10 @@ function displayResults(weather, metric) {
   if (time.slice(10, 13) < 12)
     document.querySelector(`.time`).textContent = time.slice(10) + ` AM`;
   else document.querySelector(`.time`).textContent = time.slice(10) + ` PM`;
+  
   time = time.replace(" ", "T");
   locDate = new Date(time);
+
   if (locDate.getHours() > 6 && locDate.getHours() < 12) {
     document.getElementById(`main-block`).style = morning;
   } else if (locDate.getHours() > 12 && locDate.getHours() < 18) {
