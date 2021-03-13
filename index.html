@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="assets/images/sun.png"/>
+    <title>Instant Weather</title>
+  </head>
+  <body>
+    <main class="main-block" id="main-block">
+      <input
+        type="text"
+        class="search-box"
+        autocomplete="off"
+        placeholder="Search for a city..."
+      />
+      <section class="loc-date">
+        <div class="location">
+          <div class="city">Hyderabad</div>, 
+          <div class="country">India</div>
+        </div>
+        <div class="date-time">
+          <div class="date">
+            7th March 2021,
+          </div>
+            <div class="time">09:30 PM</div>
+        </div>
+      </section>
+      <section class="temperature">
+        <div class="temp-icon">
+          <div class="temperature-reading" >
+            36°
+          </div>
+          <button class="temperature-degree" value="C" onclick="getMetric(value);">C</button>
+          <img class="weather-icon" id="icon" src="../assets/weather/64x64/day/113.png"></img>
+        </div>
+      </section>
+      <section class="real-feel-weather">
+        <div class="temp-dn-rf">
+          <div class="temperature-real-feel">Feels like 40°C</div>
+        </div>
+        <div class="weather">
+          <div class="weather-description">Sunny</div>
+        </div>
+      </section>
+      <section class="summary">
+        <div class="forecast">
+          <div class="humidity">
+            <div class="humidity-title">Humidity</div>
+            <div class="humidity-value">34%</div>
+          </div>
+          <div class="wind">
+            <div class="wind-title">Wind</div>
+            <div class="wind-value">0 kph</div>
+          </div>
+          <div class="pressure">
+            <div class="pressure-title">Pressure</div>
+            <div class="pressure-value">988 mb</div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
