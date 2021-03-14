@@ -103,8 +103,8 @@ function displayResults(weather) {
       name: "Dusk",
       value: "background-image: linear-gradient(to bottom, #BA8B02, #181818);",
     },
-    late_evening: {
-      name: "Late Evening",
+    night: {
+      name: "Night",
       value: "background-image: linear-gradient(to bottom, #9a8478, #1e130c);",
     },
     midnight: {
@@ -142,6 +142,13 @@ function displayResults(weather) {
   //var hour = locDate.getHours();
   //console.log(hour);
   switch (true) {
+    case hour >= 1 && hour <= 2:
+      document.getElementById(`main-block`).style =
+        times_of_day.middle_of_the_night.value;
+      document.querySelector(`.part-of-day`).textContent =
+        times_of_day.middle_of_the_night.name;
+      console.log(hour);
+      break;
     case hour > 2 && hour <= 5:
       document.getElementById(`main-block`).style =
         times_of_day.early_morning.value;
@@ -201,26 +208,13 @@ function displayResults(weather) {
         times_of_day.evening.name;
       console.log(hour);
       break;
-    case hour > 0 && hour <= 21:
+    case hour > 21 :
       document.getElementById(`main-block`).style =
-        times_of_day.late_evening.value;
+        times_of_day.night.value;
       document.querySelector(`.part-of-day`).textContent =
-        times_of_day.late_evening.name;
+        times_of_day.night.name;
       console.log(hour);
-      break;
-    case hour >= 0 && hour < 1:
-      document.getElementById(`main-block`).style = times_of_day.midnight.value;
-      document.querySelector(`.part-of-day`).textContent =
-        times_of_day.midnight.name;
-      console.log(hour);
-      break;
-    case hour > 1 && 2 <= hour:
-      document.getElementById(`main-block`).style =
-        times_of_day.middle_of_the_night.value;
-      document.querySelector(`.part-of-day`).textContent =
-        times_of_day.middle_of_the_night.name;
-      console.log(hour);
-      break;
+      break;   
     default:
       document.getElementById(`main-block`).style = times_of_day.default.value;
       document.querySelector(`.part-of-day`).textContent =
