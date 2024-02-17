@@ -58,7 +58,7 @@ function getResults() {
     })
     .then(displayResults);
 }
-console.log(displayResults);
+
 function displayResults(weather) {
   console.log(weather);
   let city = document.querySelector(`.location .city`);
