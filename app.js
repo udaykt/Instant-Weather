@@ -58,6 +58,7 @@ function getResults() {
           return response.json();
         })
         .then((data) => {
+          console.log(data);
           const city = data[0].name; // Assuming the first result is the desired city
           fetch(`${api.base}key=${atob(api.key)}&q=${city}&aqi=yes`)
             .then((weather) => {
