@@ -45,7 +45,7 @@ function getResults(lan, lon) {
     })
     .then(displayResults);
 }
-console.log(displayResults.json());
+
 function getResults() {
   let cityValue = document.querySelector(`.search-box`).value;
   console.log(cityValue);
@@ -58,7 +58,7 @@ function getResults() {
     })
     .then(displayResults);
 }
-
+console.log(displayResults);
 function displayResults(weather) {
   console.log(weather);
   let city = document.querySelector(`.location .city`);
