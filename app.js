@@ -49,9 +49,9 @@ function getResults(lan, lon) {
 function getResults() {
   let cityValue = document.querySelector(`.search-box`).value;
   console.log(cityValue);
-  if (cityValue == "") {
-    cityValue = "Hyderabad";
-  }
+  //if (cityValue == "") {
+  //  cityValue = "Hyderabad";
+  //}
   fetch(`${api.base}key=${atob(api.key)}&q=${cityValue}&aqi=yes`)
     .then((weather) => {
       return weather.json();
