@@ -45,31 +45,18 @@ function getResults(lan, lon) {
     })
     .then(displayResults);
 }
-
+console.log(displayResults.json());
 function getResults() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      // Fetch the city name using reverse geocoding
-      fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${api.key}`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          const city = data[0].name; // Assuming the first result is the desired city
-          fetch(`${api.base}key=${atob(api.key)}&q=${city}&aqi=yes`)
-            .then((weather) => {
-              return weather.json();
-            })
-            .then(displayResults);
-        });
-    });
-  } else {
-    console.log("Geolocation is not supported by this browser.");
+  let cityValue = document.querySelector(`.search-box`).value;
+  console.log(cityValue);
+  if (cityValue == "") {
+    cityValue = "Hyderabad";
   }
+  fetch(`${api.base}key=${atob(api.key)}&q=${cityValue}&aqi=yes`)
+    .then((weather) => {
+      return weather.json();
+    })
+    .then(displayResults);
 }
 
 function displayResults(weather) {
