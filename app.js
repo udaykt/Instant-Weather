@@ -37,6 +37,7 @@ function setQuery(out) {
     //console.log(searchbox.value);
   }
 }
+
 function getResults(lan, lon) {
   fetch(`${api.base}key=${atob(api.key)}&q=${lan},${lon}&aqi=yes`)
     .then((weather) => {
