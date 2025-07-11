@@ -66,6 +66,7 @@ export function displayResults(weather, tempState) {
     },
   };
 
+
   let time = `${weather.location.localtime}`;
   let hour = Number(time.split(" ")[1].split(":")[0]);
   let partOfDay = times_of_day.default;

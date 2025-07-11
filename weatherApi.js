@@ -1,14 +1,12 @@
 // weatherApi.js
 // Handles all weather API interactions
 
-const api = {
-  key: "Yzg4MmI3MmNlNmQ2NGVhOWE0ODEyMTAxMTIxMDcwMw==", // base64 encoded
-  base: "https://api.weatherapi.com/v1/current.json?",
-};
+// weatherApi.js
+// Handles all weather API interactions via secure backend proxy
 
 export function getResultsByCity(city) {
   let cityValue = city && city.trim() ? city : 'Hyderabad';
-  return fetch(`${api.base}key=${atob(api.key)}&q=${cityValue}&aqi=yes`)
+  return fetch(`/api/weather?city=${encodeURIComponent(cityValue)}`)
     .then((response) => {
       if (!response.ok) throw new Error('Network response was not ok');
       return response.json();
@@ -16,9 +14,10 @@ export function getResultsByCity(city) {
 }
 
 export function getResultsByCoords(lat, lon) {
-  return fetch(`${api.base}key=${atob(api.key)}&q=${lat},${lon}&aqi=yes`)
+  return fetch(`/api/weather-coords?lat=${lat}&lon=${lon}`)
     .then((response) => {
       if (!response.ok) throw new Error('Network response was not ok');
       return response.json();
     });
 }
+
