@@ -54,11 +54,17 @@ header {
   font-weight: 500;
   transition: 0.3 ease-out;
 }
-::placeholder {
-  color: #efefef;
+.search-box::placeholder {
+  color: #444;
 }
 .main-block input:focus {
   background-color: rgba(255, 255, 255, 0.6);
+}
+
+.search-box, .search-box:focus {
+  text-decoration: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 .search {
   display: flex;

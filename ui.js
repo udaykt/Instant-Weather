@@ -14,56 +14,55 @@ export function displayResults(weather, tempState) {
   const times_of_day = {
     early_morning: {
       name: "Early Morning",
-      value: "background-image: linear-gradient(to bottom, #D38312, #A83279);",
+      value: "background-image: linear-gradient(to bottom, #232526, #414345);",
     },
     dawn: {
       name: "Dawn",
-      value: "background-image: linear-gradient(to bottom, #ff4b1f, #1fddff);",
+      value: "background-image: linear-gradient(to bottom, #f7971e, #ffd200, #f7971e, #ffd200);",
     },
     morning: {
       name: "Morning",
-      value: "background-image: linear-gradient(to bottom, #E5E5BE, #003973);",
+      value: "background-image: linear-gradient(to bottom, #a1c4fd, #c2e9fb);",
     },
     late_morning: {
       name: "Late Morning",
-      value: "background-image: linear-gradient(to bottom, #00d2ff, #928DAB);",
+      value: "background-image: linear-gradient(to bottom, #fceabb, #f8b500);",
     },
     afternoon: {
       name: "Afternoon",
-      value: "background-image: linear-gradient(to bottom, #c0c0aa, #1cefff);",
+      value: "background-image: linear-gradient(to bottom, #00c6fb, #005bea);",
     },
     late_afternoon: {
       name: "Late Afternoon",
-      value: "background-image: linear-gradient(to bottom, #2196f3, #f44336);",
+      value: "background-image: linear-gradient(to bottom, #f7971e, #ffd200);",
     },
     early_evening: {
       name: "Early Evening",
-      value:
-        "background-image: linear-gradient(to bottom, #833ab4, #fd1d1d, #fcb045);",
+      value: "background-image: linear-gradient(to bottom, #f857a6, #ff5858);",
     },
     evening: {
       name: "Evening",
-      value: "background-image: linear-gradient(to bottom, #434343, #000000);",
+      value: "background-image: linear-gradient(to bottom, #667db6, #0082c8, #0082c8, #667db6);",
     },
     dusk: {
       name: "Dusk",
-      value: "background-image: linear-gradient(to bottom, #BA8B02, #181818);",
+      value: "background-image: linear-gradient(to bottom, #232526, #414345, #0f2027);",
     },
     night: {
       name: "Night",
-      value: "background-image: linear-gradient(to bottom, #9a8478, #1e130c);",
+      value: "background-image: linear-gradient(to bottom, #141e30, #243b55);",
     },
     midnight: {
       name: "Midnight",
-      value: "background-image: linear-gradient(to bottom, #414345, #232526);",
+      value: "background-image: linear-gradient(to bottom, #000428, #004e92);",
     },
     middle_of_the_night: {
       name: "Middle of the Night",
-      value: "background-image: linear-gradient(to bottom, #190A05, #870000);",
+      value: "background-image: linear-gradient(to bottom, #000000, #434343);",
     },
     default: {
       name: "",
-      value: "background-image: linear-gradient(to bottom, #4286f4, #373B44);",
+      value: "background-image: linear-gradient(to bottom, #83a4d4, #b6fbff);",
     },
   };
 
@@ -84,6 +83,35 @@ export function displayResults(weather, tempState) {
 
   document.getElementById('main-block').style = partOfDay.value;
   document.querySelector('.part-of-day').textContent = partOfDay.name;
+
+  // Dynamically set search box placeholder color for readability
+  let placeholderColor = '#efefef'; // default light
+  // Use dark placeholder for light backgrounds (morning, late_morning, afternoon)
+  if ([times_of_day.morning, times_of_day.late_morning, times_of_day.afternoon].includes(partOfDay)) {
+    placeholderColor = '#222';
+  }
+  // Remove previous dynamic placeholder style if any
+  const prevStyle = document.getElementById('dynamic-placeholder-style');
+  if (prevStyle) prevStyle.remove();
+  const style = document.createElement('style');
+  style.id = 'dynamic-placeholder-style';
+  style.innerHTML = `.search-box::placeholder { color: ${placeholderColor} !important; }\n.search-box { color: ${placeholderColor} !important; }\n.search-button { color: ${placeholderColor} !important; }`;
+  document.head.appendChild(style);
+
+  // Also update the Go button text color directly for immediate effect
+  const searchButton = document.querySelector('.search-button');
+  if (searchButton) searchButton.style.color = placeholderColor;
+
+  // Update date and time in UI
+  const dateElem = document.querySelector('.date');
+  const timeElem = document.querySelector('.time');
+  if (dateElem && timeElem) {
+    const localtime = weather.location.localtime; // e.g., "2025-07-11 21:30"
+    const [datePart, timePart] = localtime.split(' ');
+    const jsDate = new Date(localtime.replace(/-/g, '/'));
+    dateElem.textContent = dateBuilder(jsDate);
+    timeElem.textContent = timePart;
+  }
 
   // Update temperature values in shared state
   const temperature = document.querySelector('.temperature-reading');
