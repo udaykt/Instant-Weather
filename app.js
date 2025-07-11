@@ -64,19 +64,6 @@ function showError(err) {
   console.error('Weather fetch error:', err);
 }
 
-function getResultsByCity(city) {
-  let cityValue = city && city.trim() ? city : 'Hyderabad';
-  fetch(`${api.base}key=${atob(api.key)}&q=${cityValue}&aqi=yes`)
-    .then((response) => {
-      if (!response.ok) throw new Error('Network response was not ok');
-      return response.json();
-    })
-    .then(displayResults)
-    .catch(err => {
-      console.error('Weather fetch error:', err);
-      // Optionally show error to user
-    });
-}
 
 
 function displayResults(weather) {
