@@ -1,63 +1,77 @@
 const api = {
-  key: "REDACTED_WEATHERAPI_KEY=",
+  // NOTE: For production, never expose your API key in frontend code!
+  key: "REDACTED_WEATHERAPI_KEY=", // base64 encoded
   base: "https://api.weatherapi.com/v1/current.json?",
 };
-window.onload = currentLocation();
 
-var temperature = document.querySelector(`.temperature-reading`);
-var metric = document.querySelector(`.temperature-degree`);
-var hi_low = document.querySelector(`.temperature-real-feel`);
-var temp_c = 36,
-  temp_f = 97,
-  hi_low_c = 27,
-  hi_low_f = 88;
-var locDate;
+window.onload = currentLocation; // Assign function reference, not invocation
 
-const searchbox = document.querySelector(".search-box");
-searchbox.addEventListener("keypress", setQuery);
+const temperature = document.querySelector('.temperature-reading');
+const metric = document.querySelector('.temperature-degree');
+const hi_low = document.querySelector('.temperature-real-feel');
+let temp_c = 36,
+    temp_f = 97,
+    hi_low_c = 27,
+    hi_low_f = 88;
+let locDate;
+
+const searchbox = document.querySelector('.search-box');
+searchbox.addEventListener('keypress', setQuery);
 
 function currentLocation() {
   if (navigator.geolocation) {
-    //console.log(navigator.geolocation.watchPosition());
-    navigator.geolocation.getCurrentPosition(success);
+    navigator.geolocation.getCurrentPosition(success, geoError);
+  } else {
+    // Fallback: use default city if geolocation is not available
+    getResultsByCity('Hyderabad');
   }
 }
 
 function success(position) {
-  let lat = position.coords.latitude;
-  let lon = position.coords.longitude;
-  //console.log(lat + "   " + lon);
-
-  getResults(lat, lon);
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+  getResultsByCoords(lat, lon);
 }
 
-function setQuery(out) {
-  if (out.keyCode == 13) {
-    getResults();
-    //console.log(searchbox.value);
+function geoError(error) {
+  console.error('Geolocation error:', error);
+  // Fallback to default city
+  getResultsByCity('Hyderabad');
+}
+
+function setQuery(event) {
+  if (event.keyCode === 13) {
+    getResultsByCity(searchbox.value);
   }
 }
 
-function getResults(lan, lon) {
-  fetch(`${api.base}key=${atob(api.key)}&q=${lan},${lon}&aqi=yes`)
-    .then((weather) => {
-      return weather.json();
+function getResultsByCoords(lat, lon) {
+  fetch(`${api.base}key=${atob(api.key)}&q=${lat},${lon}&aqi=yes`)
+    .then((response) => {
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
     })
-    .then(displayResults);
+    .then(displayResults)
+    .catch(err => {
+      console.error('Weather fetch error:', err);
+      // Optionally show error to user
+    });
 }
 
-function getResults() {
-  let cityValue = document.querySelector(`.search-box`).value;
-  console.log(cityValue);
-  if (cityValue == "") {
-    cityValue = "Hyderabad";
-  }
+function getResultsByCity(city) {
+  let cityValue = city && city.trim() ? city : 'Hyderabad';
   fetch(`${api.base}key=${atob(api.key)}&q=${cityValue}&aqi=yes`)
-    .then((weather) => {
-      return weather.json();
+    .then((response) => {
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
     })
-    .then(displayResults);
+    .then(displayResults)
+    .catch(err => {
+      console.error('Weather fetch error:', err);
+      // Optionally show error to user
+    });
 }
+
 
 function displayResults(weather) {
   console.log(weather);
@@ -264,16 +278,16 @@ function getMetric(m) {
   }
 }
 function dateBuilder(d) {
-  let days = [
+  const days = [
     "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday",
+    "Saturday"
   ];
-  let months = [
+  const months = [
     "January",
     "February",
     "March",
@@ -285,13 +299,13 @@ function dateBuilder(d) {
     "September",
     "October",
     "November",
-    "December",
+    "December"
   ];
 
-  let day = days[d.getDay()];
-  let date = d.getDate();
-  let month = months[d.getMonth()];
-  let year = d.getFullYear();
+  const day = days[d.getDay()];
+  const date = String(d.getDate()).padStart(2, '0'); // Pad with leading zero
+  const month = months[d.getMonth()];
+  const year = d.getFullYear();
 
-  return `${day} ${date} ${month} ${year},`;
+  return `${day} ${date} ${month} ${year}`;
 }
