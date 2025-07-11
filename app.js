@@ -178,41 +178,6 @@ function displayResults(weather) {
       break;
     case hour > 9 && hour <= 12:
       document.getElementById(`main-block`).style =
-        times_of_day.late_morning.value;
-      document.querySelector(`.part-of-day`).textContent =
-        times_of_day.late_morning.name;
-      console.log(hour);
-      break;
-    case hour > 12 && hour <= 16:
-      document.getElementById(`main-block`).style =
-        times_of_day.afternoon.value;
-      document.querySelector(`.part-of-day`).textContent =
-        times_of_day.afternoon.name;
-      console.log(hour);
-      break;
-    case hour > 16 && hour <= 17:
-      document.getElementById(`main-block`).style =
-        times_of_day.late_afternoon.value;
-      document.querySelector(`.part-of-day`).textContent =
-        times_of_day.late_afternoon.name;
-      console.log(hour);
-      break;
-    case hour > 17 && hour <= 18:
-      document.getElementById(`main-block`).style =
-        times_of_day.early_evening.value;
-      document.querySelector(`.part-of-day`).textContent =
-        times_of_day.early_evening.name;
-      console.log(hour);
-      break;
-    case hour > 18 && hour <= 19:
-      document.getElementById(`main-block`).style = times_of_day.dusk.value;
-      document.querySelector(`.part-of-day`).textContent =
-        times_of_day.dusk.name;
-      console.log(hour);
-      break;
-    case hour > 19 && hour <= 21:
-      document.getElementById(`main-block`).style = times_of_day.evening.value;
-      document.querySelector(`.part-of-day`).textContent =
         times_of_day.evening.name;
       console.log(hour);
       break;
