@@ -4,3 +4,4 @@
 project_id: a58096bf-a181-4916-bbee-422b0b7e24eb
 # The framework of the web application (examples: nextjs, react, vue, etc.)
 framework: none
+name: instant-weather
