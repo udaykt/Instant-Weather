@@ -1,61 +1,67 @@
-const api = {
-  // NOTE: For production, never expose your API key in frontend code!
-  key: "REDACTED_WEATHERAPI_KEY=", // base64 encoded
-  base: "https://api.weatherapi.com/v1/current.json?",
+// app.js (refactored as ES module)
+import { getResultsByCity, getResultsByCoords } from './weatherApi.js';
+import { displayResults, getMetric } from './ui.js';
+
+// Shared state for temperature values
+const tempState = {
+  temp_c: 36,
+  temp_f: 97,
+  hi_low_c: 27,
+  hi_low_f: 88
 };
 
-window.onload = currentLocation; // Assign function reference, not invocation
-
-const temperature = document.querySelector('.temperature-reading');
-const metric = document.querySelector('.temperature-degree');
-const hi_low = document.querySelector('.temperature-real-feel');
-let temp_c = 36,
-    temp_f = 97,
-    hi_low_c = 27,
-    hi_low_f = 88;
-let locDate;
+window.onload = currentLocation;
 
 const searchbox = document.querySelector('.search-box');
 searchbox.addEventListener('keypress', setQuery);
+
+document.querySelector('.search-button').addEventListener('click', () => {
+  getResultsByCity(searchbox.value).then(weather => {
+    displayResults(weather, tempState);
+  }).catch(showError);
+});
+
+document.querySelector('.temperature-degree').addEventListener('click', function() {
+  getMetric(this.value, tempState);
+});
 
 function currentLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(success, geoError);
   } else {
     // Fallback: use default city if geolocation is not available
-    getResultsByCity('Hyderabad');
+    getResultsByCity('Hyderabad').then(displayResults).catch(showError);
   }
 }
 
 function success(position) {
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
-  getResultsByCoords(lat, lon);
+  getResultsByCoords(lat, lon).then(weather => {
+    displayResults(weather, tempState);
+  }).catch(showError);
 }
 
 function geoError(error) {
   console.error('Geolocation error:', error);
   // Fallback to default city
-  getResultsByCity('Hyderabad');
+  getResultsByCity('Hyderabad').then(weather => {
+    displayResults(weather, tempState);
+  }).catch(showError);
 }
 
 function setQuery(event) {
   if (event.keyCode === 13) {
-    getResultsByCity(searchbox.value);
+    getResultsByCity(searchbox.value).then(weather => {
+      displayResults(weather, tempState);
+    }).catch(showError);
   }
 }
 
-function getResultsByCoords(lat, lon) {
-  fetch(`${api.base}key=${atob(api.key)}&q=${lat},${lon}&aqi=yes`)
-    .then((response) => {
-      if (!response.ok) throw new Error('Network response was not ok');
-      return response.json();
-    })
-    .then(displayResults)
-    .catch(err => {
-      console.error('Weather fetch error:', err);
-      // Optionally show error to user
-    });
+function showError(err) {
+  // Optionally show error to user in the UI
+  alert('Could not fetch weather data. Please try again later.');
+  console.error('Weather fetch error:', err);
 }
 
 function getResultsByCity(city) {
