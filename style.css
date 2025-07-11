@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 body {
-  background-image: url("/images/bg.jpg");
+  background-image: url("assets/images/bg.jpg");
   background-size: cover;
   background-position: top center;
   font-family: Gilroy-Bold;
