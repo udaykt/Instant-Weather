@@ -14,7 +14,7 @@ export function getResultsByCity(city) {
 }
 
 export function getResultsByCoords(lat, lon) {
-  return fetch(`/api/weather-coords?lat=${lat}&lon=${lon}`)
+  return fetch(`/api/weather/coords?lat=${lat}&lon=${lon}`)
     .then((response) => {
       if (!response.ok) throw new Error('Network response was not ok');
       return response.json();
