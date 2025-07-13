@@ -141,6 +141,14 @@ export function displayResults(weather, tempState) {
   hi_low.innerHTML = `Feels like ${Math.round(weather.current.feelslike_c)}°C`;
   tempState.hi_low_c = Math.round(weather.current.feelslike_c);
   tempState.hi_low_f = Math.round(weather.current.feelslike_f);
+
+  // Update humidity, wind, and pressure in summary
+  const humidityElem = document.querySelector('.humidity-value');
+  const windElem = document.querySelector('.wind-value');
+  const pressureElem = document.querySelector('.pressure-value');
+  if (humidityElem && weather.current.humidity !== undefined) humidityElem.textContent = weather.current.humidity + '%';
+  if (windElem && weather.current.wind_kph !== undefined) windElem.textContent = weather.current.wind_kph + ' kph';
+  if (pressureElem && weather.current.pressure_mb !== undefined) pressureElem.textContent = weather.current.pressure_mb + ' mb';
 }
 
 export function getMetric(m, tempState) {
