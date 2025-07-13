@@ -30,8 +30,27 @@ app.get('/api/weather', async (req, res) => {
   }
 });
 
-// Optionally: Proxy by coordinates
+// Proxy by coordinates (slash version)
 app.get('/api/weather/coords', async (req, res) => {
+  const { lat, lon } = req.query;
+  if (!lat || !lon) {
+    return res.status(400).json({ error: 'lat and lon are required' });
+  }
+  try {
+    const url = `${WEATHER_API_BASE}key=${WEATHER_API_KEY}&q=${lat},${lon}&aqi=yes`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Weather API error' });
+    }
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Proxy by coordinates (hyphen version for Vercel compatibility)
+app.get('/api/weather-coords', async (req, res) => {
   const { lat, lon } = req.query;
   if (!lat || !lon) {
     return res.status(400).json({ error: 'lat and lon are required' });

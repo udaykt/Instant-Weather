@@ -4,11 +4,28 @@
 import { dateBuilder } from './utils.js';
 
 export function displayResults(weather, tempState) {
+  console.log('[displayResults] Incoming weather object:', weather);
+  if (!weather || !weather.current) {
+    console.error('[displayResults] Missing weather or weather.current:', weather);
+    return;
+  }
   console.log(weather);
   let city = document.querySelector('.location .city');
   let country = document.querySelector('.location .country');
+  let weatherDescElem = document.querySelector('.weather-description');
+  if (!city) console.error('[displayResults] .city element not found');
+  if (!country) console.error('[displayResults] .country element not found');
+  if (!weatherDescElem) console.error('[displayResults] .weather-description element not found');
   city.innerHTML = `${weather.location.name}`;
   country.innerHTML = `${weather.location.country}`;
+  if (weatherDescElem) {
+    if (weather.current.condition && weather.current.condition.text) {
+      weatherDescElem.innerHTML = weather.current.condition.text;
+    } else {
+      weatherDescElem.innerHTML = 'N/A';
+      console.error('[displayResults] weather.current.condition.text missing:', weather.current.condition);
+    }
+  }
 
     // Time-of-day background and label logic
   const times_of_day = {
