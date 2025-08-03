@@ -3,10 +3,13 @@
 
 import { dateBuilder } from './utils.js';
 
-export function displayResults(weather, tempState) {
+export function displayResults(weather, tempState, hideLoading) {
   console.log('[displayResults] Incoming weather object:', weather);
   if (!weather || !weather.current) {
     console.error('[displayResults] Missing weather or weather.current:', weather);
+    if (hideLoading && typeof hideLoading === 'function') {
+      hideLoading();
+    }
     return;
   }
   console.log(weather);
@@ -149,6 +152,13 @@ export function displayResults(weather, tempState) {
   if (humidityElem && weather.current.humidity !== undefined) humidityElem.textContent = weather.current.humidity + '%';
   if (windElem && weather.current.wind_kph !== undefined) windElem.textContent = weather.current.wind_kph + ' kph';
   if (pressureElem && weather.current.pressure_mb !== undefined) pressureElem.textContent = weather.current.pressure_mb + ' mb';
+
+  // Hide loading overlay after all UI updates are complete
+  if (hideLoading && typeof hideLoading === 'function') {
+    requestAnimationFrame(() => {
+      hideLoading();
+    });
+  }
 }
 
 export function getMetric(m, tempState) {

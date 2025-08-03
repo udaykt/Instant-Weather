@@ -10,14 +10,37 @@ const tempState = {
   hi_low_f: 88
 };
 
-window.onload = currentLocation;
+// Show loading state immediately when the script loads
+const loadingOverlay = document.getElementById('loading-overlay');
+const mainBlock = document.getElementById('main-block');
+
+// Function to hide loading overlay and show main content
+function hideLoading() {
+  loadingOverlay.classList.add('fade-out');
+  mainBlock.style.opacity = '1';
+  mainBlock.style.transition = 'opacity 0.5s ease-in';
+  
+  // Remove the loading overlay from DOM after animation completes
+  setTimeout(() => {
+    loadingOverlay.style.display = 'none';
+  }, 500);
+}
+
+// Initialize the app
+window.onload = function() {
+  // Show loading state
+  loadingOverlay.style.display = 'flex';
+  
+  // Start loading weather data
+  currentLocation();
+};
 
 const searchbox = document.querySelector('.search-box');
 searchbox.addEventListener('keypress', setQuery);
 
 document.querySelector('.search-button').addEventListener('click', () => {
   getResultsByCity(searchbox.value).then(weather => {
-    displayResults(weather, tempState);
+    displayResults(weather, tempState, hideLoading);
   }).catch(showError);
 });
 
@@ -38,7 +61,7 @@ function success(position) {
   const lat = position.coords.latitude;
   const lon = position.coords.longitude;
   getResultsByCoords(lat, lon).then(weather => {
-    displayResults(weather, tempState);
+    displayResults(weather, tempState, hideLoading);
   }).catch(showError);
 }
 
@@ -46,7 +69,7 @@ function geoError(error) {
   console.error('Geolocation error:', error);
   // Fallback to default city
   getResultsByCity('Hyderabad').then(weather => {
-    displayResults(weather, tempState);
+    displayResults(weather, tempState, hideLoading);
   }).catch(showError);
 }
 
