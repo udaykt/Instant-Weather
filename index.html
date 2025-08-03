@@ -9,7 +9,11 @@
     <title>Instant Weather</title>
   </head>
   <body>
-    <main class="main-block" id="main-block">
+    <div id="loading-overlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading weather data...</div>
+    </div>
+    <main class="main-block" id="main-block" style="opacity: 0;">
       <div class="search">
         <input
           type="text"
