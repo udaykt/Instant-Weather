@@ -72,7 +72,12 @@ app.get('/api/weather-coords', async (req, res) => {
 const path = require('path');
 app.use(express.static(path.join(__dirname)));
 
-// SPA support: serve index.html for all unknown routes (except API)
+// Route for the weather app page
+app.get('/weather', (req, res) => {
+  res.sendFile(path.join(__dirname, 'weather.html'));
+});
+
+// SPA support: serve index.html for all other unknown routes (except API)
 app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
