@@ -9,72 +9,150 @@
     <title>Instant Weather</title>
   </head>
   <body>
-    <main class="main-block" id="main-block">
-      <div class="search">
+    <header class="app-header">
+      <div class="search-container">
         <input
           type="text"
-          class="search-box"
+          class="search-input"
           autocomplete="off"
-          placeholder="Search for a city..."
+          placeholder="Explore weather anywhere..."
           onfocus="this.value='';"
           spellcheck="false"
           autocorrect="off"
         /> 
-        <button class="search-button">Go</button>
+        <button class="search-btn">🔍</button>
       </div>
-      <section class="loc-date">
-        <div class="location">
-          <div class="city">Hyderabad</div>
-          ,
-          <div class="country">India</div>
-        </div>
-        <div class="date-time">
-          <div class="date">7th March 2021,</div>
-          <div class="time">09:30 PM</div>
-        </div>
-        <div class="part-of-day">Night</div>
-      </section>
-      <section class="temperature">
-        <div class="temp-icon">
-          <div class="temperature-reading">36°</div>
-          <button
-            class="temperature-degree"
-            value="C"
-          >
-            C
-          </button>
-          <img
-            class="weather-icon"
-            id="icon"
-            src="assets/weather/64x64/day/113.png"
-          />
-        </div>
-      </section>
-      <section class="real-feel-weather">
-        <div class="temp-dn-rf">
-          <div class="temperature-real-feel">Feels like 40°C</div>
-        </div>
-        <div class="weather">
-          <div class="weather-description"></div>
-        </div>
-      </section>
-      <section class="summary">
-        <div class="forecast">
-          <div class="humidity">
-            <div class="humidity-title">Humidity</div>
-            <div class="humidity-value">34%</div>
-          </div>
-          <div class="wind">
-            <div class="wind-title">Wind</div>
-            <div class="wind-value">0 kph</div>
-          </div>
-          <div class="pressure">
-            <div class="pressure-title">Pressure</div>
-            <div class="pressure-value">988 mb</div>
+    </header>
+
+    <main class="weather-hub">
+      <!-- Left Sidebar - Sky & Wind -->
+      <aside class="sidebar-left">
+        <div class="info-card sky-card">
+          <div class="card-icon">🌤️</div>
+          <h3 class="card-title">Sky Conditions</h3>
+          <div class="card-content">
+            <div class="metric">
+              <span class="metric-label">Visibility</span>
+              <span class="metric-value visibility-value">--</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Cloud Cover</span>
+              <span class="metric-value clouds-value">--</span>
+            </div>
           </div>
         </div>
+
+        <div class="info-card wind-card">
+          <div class="card-icon">💨</div>
+          <h3 class="card-title">Wind</h3>
+          <div class="card-content">
+            <div class="metric">
+              <span class="metric-label">Speed</span>
+              <span class="metric-value wind-value">--</span>
+              <span class="metric-detail wind-gust"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card dewpoint-card">
+          <div class="card-icon">💧</div>
+          <h3 class="card-title">Comfort</h3>
+          <div class="card-content">
+            <div class="metric">
+              <span class="metric-label">Dew Point</span>
+              <span class="metric-value dewpoint-value">--°C</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center Stage - Core Weather -->
+      <section class="weather-stage">
+        <div class="location-header">
+          <div class="city-name"></div>
+          <div class="country-name"></div>
+          <div class="coords-info"></div>
+        </div>
+
+        <div class="time-header">
+          <div class="date-display"></div>
+          <div class="time-display"></div>
+          <div class="freshness-indicator"></div>
+        </div>
+
+        <div class="celestial-info">
+          <div class="sun-times"></div>
+          <div class="day-phase"></div>
+        </div>
+
+        <div class="temperature-showcase">
+          <div class="temp-display">
+            <span class="temp-number">--</span>
+            <span class="temp-unit">°</span>
+          </div>
+          <div class="right-controls">
+            <button class="unit-toggle" value="C">C</button>
+            <img class="weather-icon-main" id="icon" src="assets/weather/64x64/day/113.png" />
+          </div>
+        </div>
+
+        <div class="weather-feel">
+          <div class="feels-like"></div>
+          <div class="temp-range"></div>
+          <div class="weather-status">
+            <span class="weather-text"></span>
+            <span class="weather-tag"></span>
+          </div>
+        </div>
       </section>
+
+      <!-- Right Sidebar - Atmosphere & Precipitation -->
+      <aside class="sidebar-right">
+        <div class="info-card atmosphere-card">
+          <div class="card-icon">🌡️</div>
+          <h3 class="card-title">Atmosphere</h3>
+          <div class="card-content">
+            <div class="metric">
+              <span class="metric-label">Humidity</span>
+              <span class="metric-value humidity-value">--</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Pressure</span>
+              <span class="metric-value pressure-value">--</span>
+              <span class="metric-detail pressure-comparison"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card winddir-card">
+          <div class="card-icon">🧭</div>
+          <h3 class="card-title">Direction</h3>
+          <div class="card-content">
+            <div class="metric">
+              <span class="metric-label">From</span>
+              <span class="metric-value winddir-value">--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card precip-card">
+          <div class="card-icon">🌧️</div>
+          <h3 class="card-title">Precipitation</h3>
+          <div class="card-content">
+            <div class="metric">
+              <span class="metric-label">Current</span>
+              <span class="metric-value precipitation-value">None</span>
+            </div>
+          </div>
+        </div>
+      </aside>
     </main>
+
+    <div class="weather-alert-overlay"></div>
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading weather data...</div>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="module" src="app.js?v=1.1"></script>
   </body>
