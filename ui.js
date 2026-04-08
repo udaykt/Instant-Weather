@@ -211,11 +211,11 @@ export function displayResults(weather, tempState, hideLoading) {
   
   if (currentUnit === 'F') {
     temperature.textContent = `${tempState.temp_f}°`;
-    tempUnit.textContent = 'F';
+    tempUnit.textContent = '°F';
     hi_low.textContent = `Feels like ${tempState.hi_low_f}°F`;
   } else {
     temperature.textContent = `${tempState.temp_c}°`;
-    tempUnit.textContent = 'C';
+    tempUnit.textContent = '°C';
     hi_low.textContent = `Feels like ${tempState.hi_low_c}°C`;
   }
 

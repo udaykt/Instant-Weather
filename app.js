@@ -72,11 +72,12 @@ if (typeof document !== 'undefined') {
 }
 
 if (typeof document !== 'undefined') {
-    const unitSlider = document.querySelector('.unit-slider');
+    const tempSlider = document.querySelector('.temp-slider');
     const sliderThumb = document.querySelector('.slider-thumb');
+    const sliderIcon = document.querySelector('.slider-icon');
     
-    if (unitSlider && sliderThumb) {
-        unitSlider.addEventListener('click', function() {
+    if (tempSlider && sliderThumb) {
+        tempSlider.addEventListener('click', function() {
             const currentUnit = sliderThumb.getAttribute('data-unit');
             const newUnit = currentUnit === 'C' ? 'F' : 'C';
             
@@ -85,6 +86,12 @@ if (typeof document !== 'undefined') {
             
             // Update temperature display
             updateTemperatureDisplay(newUnit, tempState);
+            
+            // Add smooth click feedback
+            sliderThumb.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                sliderThumb.style.transform = '';
+            }, 150);
         });
     }
 }
@@ -96,11 +103,11 @@ function updateTemperatureDisplay(unit, tempState) {
     
     if (unit === 'F') {
         tempNumber.textContent = `${tempState.temp_f}°`;
-        tempUnit.textContent = 'F';
+        tempUnit.textContent = '°F';
         feelsLike.textContent = `Feels like ${tempState.hi_low_f}°F`;
     } else {
         tempNumber.textContent = `${tempState.temp_c}°`;
-        tempUnit.textContent = 'C';
+        tempUnit.textContent = '°C';
         feelsLike.textContent = `Feels like ${tempState.hi_low_c}°C`;
     }
     
