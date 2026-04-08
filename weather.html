@@ -88,12 +88,19 @@
         <div class="temperature-showcase">
           <div class="temp-display">
             <span class="temp-number">--</span>
-            <span class="temp-unit">°</span>
+            <span class="temp-unit">°C</span>
           </div>
-          <div class="right-controls">
-            <button class="unit-toggle" value="C">C</button>
-            <img class="weather-icon-main" id="icon" src="assets/weather/64x64/day/113.png" />
+          <div class="unit-toggle-container">
+            <div class="unit-slider">
+              <div class="slider-track"></div>
+              <div class="slider-thumb" data-unit="C"></div>
+              <div class="unit-labels">
+                <span class="unit-label" data-unit="C">C</span>
+                <span class="unit-label" data-unit="F">F</span>
+              </div>
+            </div>
           </div>
+          <img class="weather-icon-main" id="icon" src="assets/weather/64x64/day/113.png" />
         </div>
 
         <div class="weather-feel">

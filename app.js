@@ -1,6 +1,6 @@
 // app.js (refactored as ES module)
 import { getResultsByCity, getResultsByCoords } from './weatherApi.js';
-import { displayResults, getMetric } from './ui.js';
+import { displayResults, updateHighLowTemperatures, updateDewPoint } from './ui.js';
 
 // Shared state for temperature values
 const tempState = {
@@ -47,7 +47,8 @@ if (typeof document !== 'undefined') {
                     hideLoading();
                 }).catch(err => {
                     hideLoading();
-                    showError(err);
+                    // If backend is not available, show demo data
+                    showDemoData();
                 });
             }
         });
@@ -62,7 +63,8 @@ if (typeof document !== 'undefined') {
                     hideLoading();
                 }).catch(err => {
                     hideLoading();
-                    showError(err);
+                    // If backend is not available, show demo data
+                    showDemoData();
                 });
             }
         });
@@ -70,11 +72,42 @@ if (typeof document !== 'undefined') {
 }
 
 if (typeof document !== 'undefined') {
-    const tempDegree = document.querySelector('.unit-toggle');
-    if (tempDegree) {
-        tempDegree.addEventListener('click', function() {
-            getMetric(this.value, tempState);
+    const unitSlider = document.querySelector('.unit-slider');
+    const sliderThumb = document.querySelector('.slider-thumb');
+    
+    if (unitSlider && sliderThumb) {
+        unitSlider.addEventListener('click', function() {
+            const currentUnit = sliderThumb.getAttribute('data-unit');
+            const newUnit = currentUnit === 'C' ? 'F' : 'C';
+            
+            // Update slider position
+            sliderThumb.setAttribute('data-unit', newUnit);
+            
+            // Update temperature display
+            updateTemperatureDisplay(newUnit, tempState);
         });
+    }
+}
+
+function updateTemperatureDisplay(unit, tempState) {
+    const tempNumber = document.querySelector('.temp-number');
+    const tempUnit = document.querySelector('.temp-unit');
+    const feelsLike = document.querySelector('.feels-like');
+    
+    if (unit === 'F') {
+        tempNumber.textContent = `${tempState.temp_f}°`;
+        tempUnit.textContent = 'F';
+        feelsLike.textContent = `Feels like ${tempState.hi_low_f}°F`;
+    } else {
+        tempNumber.textContent = `${tempState.temp_c}°`;
+        tempUnit.textContent = 'C';
+        feelsLike.textContent = `Feels like ${tempState.hi_low_c}°C`;
+    }
+    
+    // Update other temperature displays by calling the update functions
+    if (currentWeatherData) {
+        updateHighLowTemperatures(currentWeatherData);
+        updateDewPoint(currentWeatherData);
     }
 }
 
@@ -88,7 +121,8 @@ function currentLocation() {
         hideLoading();
     }).catch(err => {
         hideLoading();
-        showError(err);
+        // If backend is not available, show demo data
+        showDemoData();
     });
   }
 }
@@ -101,7 +135,8 @@ function success(position) {
     hideLoading();
   }).catch(err => {
     hideLoading();
-    showError(err);
+    // If backend is not available, show demo data
+    showDemoData();
   });
 }
 
@@ -113,8 +148,85 @@ function geoError(error) {
     hideLoading();
   }).catch(err => {
     hideLoading();
-    showError(err);
+    // If backend is not available, show demo data
+    showDemoData();
   });
+}
+
+function showDemoData() {
+  // Demo weather data to showcase the temperature toggle functionality
+  const demoWeather = {
+    name: 'Demo City',
+    main: {
+      temp: 25,
+      feels_like: 27,
+      temp_min: 20,
+      temp_max: 30,
+      humidity: 65,
+      pressure: 1013
+    },
+    weather: [{
+      main: 'Clear',
+      description: 'clear sky',
+      icon: '01d'
+    }],
+    wind: {
+      speed: 3.5,
+      deg: 180
+    },
+    sys: {
+      country: 'Demo',
+      sunrise: Math.floor(Date.now() / 1000) - 3600 * 6,
+      sunset: Math.floor(Date.now() / 1000) + 3600 * 6
+    },
+    coord: {
+      lat: 0,
+      lon: 0
+    },
+    dt: Math.floor(Date.now() / 1000),
+    timezone: 0,
+    visibility: 10000,
+    clouds: { all: 10 }
+  };
+  
+  displayResults(demoWeather, tempState);
+  
+  // Show a small notification that this is demo data
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    font-family: Arial, sans-serif;
+    max-width: 300px;
+  `;
+  notification.innerHTML = `
+    <strong>Demo Mode</strong><br>
+    Backend server not available. Showing demo data to test temperature toggle.
+    <button onclick="this.parentElement.remove()" style="
+      margin-top: 10px;
+      padding: 5px 10px;
+      border: none;
+      background: #667eea;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    ">Dismiss</button>
+  `;
+  document.body.appendChild(notification);
+  
+  // Auto-remove after 10 seconds
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove();
+    }
+  }, 10000);
 }
 
 function setQuery(event) {

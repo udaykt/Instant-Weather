@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Toggle Test</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+        }
+        .test-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">Temperature Toggle Test</h1>
+        
+        <div class="temperature-showcase">
+            <div class="unit-toggle-container">
+                <div class="unit-slider">
+                    <div class="slider-track"></div>
+                    <div class="slider-thumb" data-unit="C"></div>
+                    <div class="unit-labels">
+                        <span class="unit-label" data-unit="C">C</span>
+                        <span class="unit-label" data-unit="F">F</span>
+                    </div>
+                </div>
+            </div>
+            <div class="temp-display">
+                <span class="temp-number">25°</span>
+                <span class="temp-unit">C</span>
+                <div class="day-night-indicator">sun</div>
+            </div>
+            <img class="weather-icon-main" src="assets/weather/64x64/day/113.png" />
+        </div>
+        
+        <div style="margin-top: 30px; color: white; text-align: center;">
+            <p>Click the slider to toggle between Celsius and Fahrenheit</p>
+            <p>Current temperature: <span id="current-temp">25°C</span></p>
+            <p>Feels like: <span id="feels-like">27°C</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Simulated temperature state
+        const tempState = {
+            temp_c: 25,
+            temp_f: 77,
+            hi_low_c: 27,
+            hi_low_f: 81
+        };
+
+        // Initialize slider functionality
+        const unitSlider = document.querySelector('.unit-slider');
+        const sliderThumb = document.querySelector('.slider-thumb');
+        
+        if (unitSlider && sliderThumb) {
+            unitSlider.addEventListener('click', function() {
+                const currentUnit = sliderThumb.getAttribute('data-unit');
+                const newUnit = currentUnit === 'C' ? 'F' : 'C';
+                
+                // Update slider position
+                sliderThumb.setAttribute('data-unit', newUnit);
+                
+                // Update temperature display
+                updateTemperatureDisplay(newUnit, tempState);
+            });
+        }
+
+        function updateTemperatureDisplay(unit, tempState) {
+            const tempNumber = document.querySelector('.temp-number');
+            const tempUnit = document.querySelector('.temp-unit');
+            const feelsLikeEl = document.getElementById('feels-like');
+            
+            if (unit === 'F') {
+                tempNumber.textContent = `${tempState.temp_f}°`;
+                tempUnit.textContent = 'F';
+                currentTempEl.textContent = `${tempState.temp_f}°F`;
+                feelsLikeEl.textContent = `${tempState.hi_low_f}°F`;
+            } else {
+                tempNumber.textContent = `${tempState.temp_c}°`;
+                tempUnit.textContent = 'C';
+                currentTempEl.textContent = `${tempState.temp_c}°C`;
+                feelsLikeEl.textContent = `${tempState.hi_low_c}°C`;
+            }
+        }
+
+        // Initialize day/night indicator
+        const indicator = document.querySelector('.day-night-indicator');
+        if (indicator) {
+            const hour = new Date().getHours();
+            if (hour >= 6 && hour < 18) {
+                indicator.textContent = 'sun';
+                indicator.style.color = '#FFD700';
+            } else {
+                indicator.textContent = 'moon';
+                indicator.style.color = '#F0F0F0';
+            }
+        }
+    </script>
+</body>
+</html>

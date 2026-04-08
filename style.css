@@ -285,64 +285,275 @@ body {
 }
 
 .temperature-showcase {
+  display: grid;
+  grid-template-columns: 120px 1fr 120px;
+  grid-template-rows: 1fr;
+  gap: 20px;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+  min-height: 200px;
+}
+
+.unit-toggle-container {
   display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 15px;
-  padding: 30px;
+  justify-self: start;
+  align-self: center;
+  grid-column: 1;
+}
+
+.unit-slider {
+  position: relative;
+  width: 100px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.slider-track {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  right: 3px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transform: translateY(-50%);
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 12px;
+  transform: translateY(-50%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.slider-thumb[data-unit="F"] {
+  transform: translateX(70px) translateY(-50%);
+}
+
+.unit-labels {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.unit-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: Gilroy-Heavy, Arial, sans-serif;
+  transition: color 0.3s ease;
+}
+
+.slider-thumb[data-unit="C"] ~ .unit-labels .unit-label[data-unit="C"],
+.slider-thumb[data-unit="F"] ~ .unit-labels .unit-label[data-unit="F"] {
+  color: white;
+  font-weight: 900;
 }
 
 .temp-display {
   display: flex;
   align-items: baseline;
-  gap: 2px;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
+  justify-self: center;
+  align-self: center;
+  grid-column: 2;
 }
 
 .temp-number {
   font-size: 120px;
   font-weight: 900;
-  color: white;
-  text-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  color: #fff;
   line-height: 1;
+  font-family: Gilroy-Heavy, Arial, sans-serif;
+  text-shadow: 2px 5px rgba(0, 0, 0, 0.6);
+  text-align: center;
 }
 
 .temp-unit {
-  font-size: 40px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  margin-top: -15px;
-}
-
-.right-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-left: 10px;
-}
-
-.unit-toggle {
-  width: 35px;
-  height: 35px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 60px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
   font-family: Gilroy-Heavy, Arial, sans-serif;
+  text-shadow: 2px 5px rgba(0, 0, 0, 0.6);
+  vertical-align: baseline;
+  margin-left: 5px;
 }
 
-.unit-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-  transform: scale(1.1);
+.weather-icon-main {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+  animation: float 3s ease-in-out infinite;
+  justify-self: center;
+  align-self: center;
+  grid-column: 3;
 }
 
-.unit-toggle:focus {
-  outline: none;
+.day-night-indicator {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  justify-self: center;
+  align-self: center;
+  grid-column: 3;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .temperature-showcase {
+    grid-template-columns: 100px 1fr 100px;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .unit-toggle-container {
+    grid-column: 1;
+  }
+
+  .temp-display {
+    grid-column: 2;
+  }
+
+  .weather-icon-main {
+    grid-column: 3;
+    width: 70px;
+    height: 70px;
+  }
+
+  .day-night-indicator {
+    grid-column: 3;
+  }
+
+  .temp-number {
+    font-size: 100px;
+  }
+
+  .temp-unit {
+    font-size: 50px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    font-family: Gilroy-Heavy, Arial, sans-serif;
+    text-shadow: 2px 5px rgba(0, 0, 0, 0.6);
+  }
+
+  .unit-toggle {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .temperature-showcase {
+    grid-template-columns: 80px 1fr 80px;
+    gap: 10px;
+    padding: 15px;
+    min-height: 120px;
+  }
+
+  .unit-toggle-container {
+    grid-column: 1;
+  }
+
+  .temp-display {
+    grid-column: 2;
+  }
+
+  .weather-icon-main {
+    grid-column: 3;
+    width: 50px;
+    height: 50px;
+  }
+
+  .day-night-indicator {
+    grid-column: 3;
+  }
+
+  .temp-number {
+    font-size: 80px;
+  }
+
+  .temp-unit {
+    font-size: 40px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    font-family: Gilroy-Heavy, Arial, sans-serif;
+    text-shadow: 2px 5px rgba(0, 0, 0, 0.6);
+  }
+
+  .unit-toggle {
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .temperature-showcase {
+    grid-template-columns: 60px 1fr 60px;
+    gap: 10px;
+    padding: 15px;
+    min-height: 100px;
+  }
+
+  .unit-toggle-container {
+    grid-column: 1;
+  }
+
+  .temp-display {
+    grid-column: 2;
+  }
+
+  .weather-icon-main {
+    grid-column: 3;
+    width: 40px;
+    height: 40px;
+  }
+
+  .day-night-indicator {
+    grid-column: 3;
+  }
+
+  .temp-number {
+    font-size: 60px;
+  }
+
+  .temp-unit {
+    font-size: 30px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    font-family: Gilroy-Heavy, Arial, sans-serif;
+    text-shadow: 2px 5px rgba(0, 0, 0, 0.6);
+  }
+
+  .unit-toggle {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
 }
 
 .weather-icon-main {
@@ -1026,11 +1237,6 @@ main {
     font-size: 90px;
   }
 
-  .temp-unit {
-    font-size: 30px;
-    margin-top: -10px;
-  }
-
   .unit-toggle {
     width: 30px;
     height: 30px;
@@ -1100,11 +1306,6 @@ main {
 
   .temp-number {
     font-size: 80px;
-  }
-
-  .temp-unit {
-    font-size: 28px;
-    margin-top: -10px;
   }
 
   .unit-toggle {
@@ -1181,11 +1382,6 @@ main {
 
   .temp-number {
     font-size: 60px;
-  }
-
-  .temp-unit {
-    font-size: 25px;
-    margin-top: -8px;
   }
 
   .unit-toggle {

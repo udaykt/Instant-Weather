@@ -190,14 +190,34 @@ export function displayResults(weather, tempState, hideLoading) {
 
   // Update temperature values in shared state
   const temperature = document.querySelector('.temp-number');
+  const tempUnit = document.querySelector('.temp-unit');
   const hi_low = document.querySelector('.feels-like');
+  const sliderThumb = document.querySelector('.slider-thumb');
 
-  temperature.textContent = Math.round(weather.main.temp);
+  // Store temperature values in both units
   tempState.temp_c = Math.round(weather.main.temp);
   tempState.temp_f = Math.round(weather.main.temp * 9/5 + 32);
-  hi_low.textContent = `Feels like ${Math.round(weather.main.feels_like)}°C`;
   tempState.hi_low_c = Math.round(weather.main.feels_like);
   tempState.hi_low_f = Math.round(weather.main.feels_like * 9/5 + 32);
+  
+  // Get current unit from slider or default to Celsius
+  let currentUnit = sliderThumb ? sliderThumb.getAttribute('data-unit') : 'C';
+  
+  // Ensure slider is properly initialized to Celsius if no valid unit is set
+  if (sliderThumb && (!currentUnit || (currentUnit !== 'C' && currentUnit !== 'F'))) {
+    sliderThumb.setAttribute('data-unit', 'C');
+    currentUnit = 'C';
+  }
+  
+  if (currentUnit === 'F') {
+    temperature.textContent = `${tempState.temp_f}°`;
+    tempUnit.textContent = 'F';
+    hi_low.textContent = `Feels like ${tempState.hi_low_f}°F`;
+  } else {
+    temperature.textContent = `${tempState.temp_c}°`;
+    tempUnit.textContent = 'C';
+    hi_low.textContent = `Feels like ${tempState.hi_low_c}°C`;
+  }
 
   // Update humidity, wind, and pressure in summary
   const humidityElem = document.querySelector('.humidity-value');
@@ -265,6 +285,9 @@ export function displayResults(weather, tempState, hideLoading) {
   
   // Add sunrise/sunset times
   updateSunTimes(weather);
+  
+  // Update day/night indicator
+  updateDayNightIndicator(weather);
 
   // Hide loading overlay after all UI updates are complete
   if (hideLoading && typeof hideLoading === 'function') {
@@ -274,20 +297,26 @@ export function displayResults(weather, tempState, hideLoading) {
   }
 }
 
-export function getMetric(m, tempState) {
-  const metric = document.querySelector('.unit-toggle');
-  const temperature = document.querySelector('.temp-number');
-  const hi_low = document.querySelector('.feels-like');
-  if (m === 'C') {
-    metric.value = 'F';
-    metric.innerHTML = 'F';
-    temperature.textContent = tempState.temp_f;
-    hi_low.textContent = `Feels like ${tempState.hi_low_f}°F`;
+// Function to update day/night indicator
+function updateDayNightIndicator(weather) {
+  const indicator = document.querySelector('.day-night-indicator');
+  if (!indicator) return;
+  
+  if (weather.sys && weather.sys.sunrise && weather.sys.sunset) {
+    const now = Math.floor(Date.now() / 1000);
+    const sunrise = weather.sys.sunrise;
+    const sunset = weather.sys.sunset;
+    
+    if (now >= sunrise && now < sunset) {
+      indicator.textContent = '☀️';
+      indicator.title = 'Daytime';
+    } else {
+      indicator.textContent = '🌙';
+      indicator.title = 'Nighttime';
+    }
   } else {
-    metric.value = 'C';
-    metric.innerHTML = 'C';
-    temperature.textContent = tempState.temp_c;
-    hi_low.textContent = `Feels like ${tempState.hi_low_c}°C`;
+    indicator.textContent = '☀️';
+    indicator.title = 'Daytime';
   }
 }
 
@@ -305,14 +334,23 @@ function getWindDirection(degrees) {
 }
 
 // Function to update high/low temperatures
-function updateHighLowTemperatures(weather) {
+export function updateHighLowTemperatures(weather) {
   const highLowElem = document.querySelector('.temp-range');
   if (!highLowElem) return;
   
   if (weather.main.temp_min && weather.main.temp_max) {
-    const high = Math.round(weather.main.temp_max);
-    const low = Math.round(weather.main.temp_min);
-    highLowElem.innerHTML = `<strong>Today:</strong> H ${high}° / L ${low}°`;
+    const sliderThumb = document.querySelector('.slider-thumb');
+    const currentUnit = sliderThumb ? sliderThumb.getAttribute('data-unit') : 'C';
+    
+    if (currentUnit === 'F') {
+      const high = Math.round(weather.main.temp_max * 9/5 + 32);
+      const low = Math.round(weather.main.temp_min * 9/5 + 32);
+      highLowElem.innerHTML = `<strong>Today:</strong> H ${high}°F / L ${low}°F`;
+    } else {
+      const high = Math.round(weather.main.temp_max);
+      const low = Math.round(weather.main.temp_min);
+      highLowElem.innerHTML = `<strong>Today:</strong> H ${high}°C / L ${low}°C`;
+    }
   }
 }
 
@@ -582,7 +620,7 @@ function updatePrecipitation(weather) {
 }
 
 // Function to calculate and update dew point
-function updateDewPoint(weather) {
+export function updateDewPoint(weather) {
   const dewPointElem = document.querySelector('.dewpoint-value');
   if (!dewPointElem) return;
   
@@ -596,9 +634,19 @@ function updateDewPoint(weather) {
     const alpha = ((a * temp) / (b + temp)) + Math.log(humidity / 100.0);
     const dewPoint = (b * alpha) / (a - alpha);
     
-    dewPointElem.textContent = `${Math.round(dewPoint)}°C`;
+    const sliderThumb = document.querySelector('.slider-thumb');
+    const currentUnit = sliderThumb ? sliderThumb.getAttribute('data-unit') : 'C';
+    
+    if (currentUnit === 'F') {
+      const dewPointF = Math.round(dewPoint * 9/5 + 32);
+      dewPointElem.textContent = `${dewPointF}°F`;
+    } else {
+      dewPointElem.textContent = `${Math.round(dewPoint)}°C`;
+    }
   } else {
-    dewPointElem.textContent = '--°C';
+    const sliderThumb = document.querySelector('.slider-thumb');
+    const currentUnit = sliderThumb ? sliderThumb.getAttribute('data-unit') : 'C';
+    dewPointElem.textContent = `--${currentUnit}`;
   }
 }
 
