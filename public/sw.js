@@ -1,16 +1,12 @@
 // sw.js — Service Worker for Instant Weather PWA
-const CACHE = 'instant-weather-v1';
+// Note: Vite generates hashed filenames for JS/CSS bundles, so we only
+// pre-cache the stable HTML shells. Everything else is cached on first use.
+const CACHE = 'instant-weather-v2';
 
 const PRECACHE = [
   '/',
   '/index.html',
   '/weather.html',
-  '/style.css',
-  '/app.js',
-  '/weatherApi.js',
-  '/ui.js',
-  '/utils.js',
-  '/manifest.json',
   '/assets/images/sun.png',
   '/assets/fonts/Gilroy-Bold.ttf',
   '/assets/fonts/Gilroy-Heavy.ttf',
