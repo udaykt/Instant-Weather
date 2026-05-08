@@ -4,6 +4,10 @@
   "description": "Real-time weather app with 5-day forecast, AQI, and PWA support.",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "start": "node server.cjs",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -17,6 +21,8 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^1.6.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
     "vitest": "^1.6.0"
   }
 }

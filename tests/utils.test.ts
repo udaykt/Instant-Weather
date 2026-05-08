@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { dateBuilder, debounce, getTimeOfDay, TIMES_OF_DAY } from '../utils.js';
+import { dateBuilder, debounce, getTimeOfDay, TIMES_OF_DAY } from '../src/utils';
 
 // ── dateBuilder ──────────────────────────────────────────────────────────────
 describe('dateBuilder', () => {
@@ -79,10 +79,11 @@ describe('getTimeOfDay', () => {
     expect(getTimeOfDay(22)).toBe(TIMES_OF_DAY.night);
   });
 
-  it('every time-of-day entry has gradient and name properties', () => {
+  it('every entry has gradient, name, and isLight properties', () => {
     for (const [key, val] of Object.entries(TIMES_OF_DAY)) {
       expect(val, `${key} missing gradient`).toHaveProperty('gradient');
       expect(val, `${key} missing isLight`).toHaveProperty('isLight');
+      expect(val, `${key} missing name`).toHaveProperty('name');
     }
   });
 });

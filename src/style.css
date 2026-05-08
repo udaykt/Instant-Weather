@@ -419,7 +419,7 @@ body.home {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url('assets/images/bg.jpg');
+  background-image: url('/assets/images/bg.jpg');
   background-size: cover;
   background-position: center;
 }

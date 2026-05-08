@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Real-time weather forecasts for any city worldwide." />
     <meta name="theme-color" content="#141e30" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="assets/images/sun.png" />
-    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="icon" type="image/png" href="/assets/images/sun.png" />
+    <link rel="manifest" href="/manifest.json" />
     <title>Instant Weather</title>
   </head>
   <body>
@@ -61,7 +61,7 @@
           <div class="temperature-reading skeleton-text" aria-label="Temperature">--°</div>
           <button class="temperature-degree" value="C" aria-label="Switch to Fahrenheit">C</button>
           <img class="weather-icon" id="icon"
-               src="assets/weather/64x64/day/113.png"
+               src="/assets/weather/64x64/day/113.png"
                alt="Weather condition icon" width="64" height="64" />
         </div>
       </section>
@@ -107,6 +107,6 @@
 
     </main>
 
-    <script type="module" src="app.js"></script>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

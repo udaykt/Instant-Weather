@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Instant Weather — real-time forecasts for any city worldwide." />
   <meta name="theme-color" content="#141e30" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="assets/images/sun.png" />
-  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/sun.png" />
+  <link rel="manifest" href="/manifest.json" />
   <title>Instant Weather</title>
 </head>
 <body class="home">
   <div class="home-container">
-    <img src="assets/images/sun.png" alt="Instant Weather Logo" class="home-logo" width="90" height="90" />
+    <img src="/assets/images/sun.png" alt="Instant Weather Logo" class="home-logo" width="90" height="90" />
     <h1 class="home-greeting">Instant Weather</h1>
     <p class="home-tagline">Real-time weather + 5-day forecasts for any city in the world. Detects your location automatically.</p>
     <div class="home-features">
@@ -25,38 +25,6 @@
     <a href="weather.html" class="home-button">Check the Weather</a>
   </div>
 
-  <script>
-    // Apply time-of-day gradient to the landing page background
-    (function () {
-      const hour = new Date().getHours();
-      const gradients = [
-        'linear-gradient(to bottom, #000428, #004e92)',  // 0  midnight
-        'linear-gradient(to bottom, #000000, #434343)',  // 1
-        'linear-gradient(to bottom, #000000, #434343)',  // 2  middle of night
-        'linear-gradient(to bottom, #232526, #414345)',  // 3  early morning
-        'linear-gradient(to bottom, #232526, #414345)',  // 4
-        'linear-gradient(to bottom, #232526, #414345)',  // 5
-        'linear-gradient(to bottom, #f7971e, #ffd200)',  // 6  dawn
-        'linear-gradient(to bottom, #a1c4fd, #c2e9fb)',  // 7  morning
-        'linear-gradient(to bottom, #a1c4fd, #c2e9fb)',  // 8
-        'linear-gradient(to bottom, #a1c4fd, #c2e9fb)',  // 9
-        'linear-gradient(to bottom, #fceabb, #f8b500)',  // 10 late morning
-        'linear-gradient(to bottom, #fceabb, #f8b500)',  // 11
-        'linear-gradient(to bottom, #fceabb, #f8b500)',  // 12
-        'linear-gradient(to bottom, #00c6fb, #005bea)',  // 13 afternoon
-        'linear-gradient(to bottom, #00c6fb, #005bea)',  // 14
-        'linear-gradient(to bottom, #00c6fb, #005bea)',  // 15
-        'linear-gradient(to bottom, #00c6fb, #005bea)',  // 16
-        'linear-gradient(to bottom, #f7971e, #ffd200)',  // 17 late afternoon
-        'linear-gradient(to bottom, #f857a6, #ff5858)',  // 18 early evening
-        'linear-gradient(to bottom, #232526, #414345)',  // 19 dusk
-        'linear-gradient(to bottom, #667db6, #0082c8)',  // 20 evening
-        'linear-gradient(to bottom, #667db6, #0082c8)',  // 21
-        'linear-gradient(to bottom, #141e30, #243b55)',  // 22 night
-        'linear-gradient(to bottom, #141e30, #243b55)',  // 23
-      ];
-      document.body.style.backgroundImage = gradients[hour] || gradients[0];
-    })();
-  </script>
+  <script type="module" src="/src/landing.ts"></script>
 </body>
 </html>
