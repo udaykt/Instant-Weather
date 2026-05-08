@@ -2,8 +2,9 @@
 
 import type { WeatherResponse, CityResult } from './types';
 
-const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-const API_BASE = isLocal ? 'http://localhost:5000' : '';
+// Always use relative paths. In dev, Vite proxies /api/* → localhost:5000.
+// In production, Netlify/Vercel intercept /api/* with their serverless functions.
+const API_BASE = '';
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
 interface CacheEntry<T> {
