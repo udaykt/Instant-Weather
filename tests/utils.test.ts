@@ -19,8 +19,8 @@ describe('dateBuilder', () => {
 
 // ── debounce ─────────────────────────────────────────────────────────────────
 describe('debounce', () => {
-  beforeEach(() => vi.useFakeTimers());
-  afterEach(() => vi.useRealTimers());
+  beforeEach(() => { vi.useFakeTimers(); });
+  afterEach(() => { vi.useRealTimers(); });
 
   it('delays invocation until after the wait period', () => {
     const fn = vi.fn();
