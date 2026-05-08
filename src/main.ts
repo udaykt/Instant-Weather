@@ -3,7 +3,7 @@
 import { getResultsByCity, getResultsByCoords, searchCities } from './weatherApi';
 import { displayResults, getMetric } from './ui';
 import { debounce } from './utils';
-import type { TempState } from './types';
+import type { TempState, WeatherResponse } from './types';
 
 // Shared temperature state (C and F for the current city)
 const tempState: TempState = { temp_c: 0, temp_f: 0, hi_low_c: 0, hi_low_f: 0 };
@@ -20,7 +20,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // ─── Fetch helper ─────────────────────────────────────────────────────────────
-async function fetchAndDisplay(promise: ReturnType<typeof getResultsByCity | typeof getResultsByCoords>): Promise<void> {
+async function fetchAndDisplay(promise: Promise<WeatherResponse>): Promise<void> {
   searchBtn.disabled = true;
   try {
     const weather = await promise;

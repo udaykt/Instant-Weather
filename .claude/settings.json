@@ -4,7 +4,10 @@
       "Bash(npm install *)",
       "Bash(npm run *)",
       "Bash(npm test *)",
-      "Bash(powershell -Command \"Start-Sleep 3; Get-Content 'C:\\\\Users\\\\Uday\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Projects-Instant-Weather\\\\08806e70-0210-4b5a-8dab-e16900030373\\\\tasks\\\\byx1jpp0b.output' -ErrorAction SilentlyContinue\")"
+      "Bash(powershell -Command \"Start-Sleep 3; Get-Content 'C:\\\\Users\\\\Uday\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Projects-Instant-Weather\\\\08806e70-0210-4b5a-8dab-e16900030373\\\\tasks\\\\byx1jpp0b.output' -ErrorAction SilentlyContinue\")",
+      "Bash(powershell -Command \"Test-Path .env\")",
+      "Bash(Get-Content .env.example)",
+      "Bash(Get-Content .env)"
     ]
   }
 }
