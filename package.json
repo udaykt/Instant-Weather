@@ -1,0 +1,22 @@
+{
+  "name": "instant-weather",
+  "version": "2.0.0",
+  "description": "Real-time weather app with 5-day forecast, AQI, and PWA support.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.6.0",
+    "vitest": "^1.6.0"
+  }
+}
