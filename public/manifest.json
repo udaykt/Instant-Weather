@@ -1,0 +1,25 @@
+{
+  "name": "Instant Weather",
+  "short_name": "Weather",
+  "description": "Real-time weather forecasts for any city worldwide.",
+  "start_url": "/weather.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141e30",
+  "theme_color": "#141e30",
+  "icons": [
+    {
+      "src": "assets/images/sun.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/sun.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["weather", "utilities"]
+}

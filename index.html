@@ -1,60 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Instant Weather</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="assets/images/sun.png" />
-    <style>
-        /* Additional styles for the home page */
-        body.home {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            overflow: hidden; /* Prevent scrollbars */
-        }
-        .home-container {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 40px;
-            border-radius: 15px;
-            color: white;
-            max-width: 600px;
-        }
-        .home-logo {
-            width: 150px;
-            margin-bottom: 20px;
-        }
-        .home-greeting {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        .home-button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            color: white;
-            background-color: #3498db;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .home-button:hover {
-            background-color: #2980b9;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Instant Weather — real-time forecasts for any city worldwide." />
+  <meta name="theme-color" content="#141e30" />
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/sun.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>Instant Weather</title>
 </head>
 <body class="home">
-    <div class="home-container">
-        <img src="assets/images/sun.png" alt="Instant Weather Logo" class="home-logo">
-        <h1 class="home-greeting">Welcome to Instant Weather</h1>
-        <p style="margin-bottom: 30px; font-size: 1.1rem;">Get real-time weather updates for any city in the world.</p>
-        <a href="weather.html" class="home-button">Check the Weather</a>
+  <div class="home-container">
+    <img src="/assets/images/sun.png" alt="Instant Weather Logo" class="home-logo" width="90" height="90" />
+    <h1 class="home-greeting">Instant Weather</h1>
+    <p class="home-tagline">Real-time weather + 5-day forecasts for any city in the world. Detects your location automatically.</p>
+    <div class="home-features">
+      <span class="home-feature-chip">Geolocation</span>
+      <span class="home-feature-chip">5-Day Forecast</span>
+      <span class="home-feature-chip">Air Quality</span>
+      <span class="home-feature-chip">Installable PWA</span>
+      <span class="home-feature-chip">Works Offline</span>
     </div>
+    <a href="weather.html" class="home-button">Check the Weather</a>
+  </div>
+
+  <script type="module" src="/src/landing.ts"></script>
 </body>
 </html>

@@ -4,82 +4,109 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="assets/images/sun.png" />
+    <meta name="description" content="Real-time weather forecasts for any city worldwide." />
+    <meta name="theme-color" content="#141e30" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="icon" type="image/png" href="/assets/images/sun.png" />
+    <link rel="manifest" href="/manifest.json" />
     <title>Instant Weather</title>
   </head>
   <body>
-    <div id="loading-overlay">
-      <div class="loading-spinner"></div>
-      <div class="loading-text">Loading weather data...</div>
-    </div>
-    <main class="main-block" id="main-block" style="opacity: 0;">
-      <div class="search">
-        <input
-          type="text"
-          class="search-box"
-          autocomplete="off"
-          placeholder="Search for a city..."
-          onfocus="this.value='';"
-          spellcheck="false"
-          autocorrect="off"
-        /> 
-        <button class="search-button">Go</button>
+    <main class="main-block" id="main-block" aria-live="polite" aria-busy="true">
+
+      <!-- ── Search ─────────────────────────────────────────────────────── -->
+      <div class="search" role="search">
+        <div class="search-wrapper">
+          <input
+            type="text"
+            class="search-box"
+            id="search-box"
+            autocomplete="off"
+            placeholder="Search for a city..."
+            spellcheck="false"
+            autocorrect="off"
+            aria-label="Search for a city"
+            aria-autocomplete="list"
+            aria-controls="search-suggestions"
+          />
+          <button class="search-button" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <ul class="search-suggestions" id="search-suggestions"
+              role="listbox" aria-label="City suggestions"></ul>
+        </div>
       </div>
-      <section class="loc-date">
+
+      <!-- ── Location & date ───────────────────────────────────────────── -->
+      <section class="loc-date" aria-label="Location and time">
         <div class="location">
-          <div class="city">Hyderabad</div>
-          ,
-          <div class="country">India</div>
+          <span class="city skeleton-text" aria-label="City">City Name</span><span class="sep">,&nbsp;</span><span class="country skeleton-text" aria-label="Country">Country</span>
         </div>
         <div class="date-time">
-          <div class="date">7th March 2021,</div>
-          <div class="time">09:30 PM</div>
+          <span class="date skeleton-text">Loading date...</span>
+          <span class="time skeleton-text">&nbsp;00:00</span>
         </div>
-        <div class="part-of-day">Night</div>
+        <div class="part-of-day skeleton-text" aria-label="Time of day">Time of day</div>
       </section>
-      <section class="temperature">
+
+      <!-- ── Temperature ───────────────────────────────────────────────── -->
+      <section class="temperature" aria-label="Current temperature">
         <div class="temp-icon">
-          <div class="temperature-reading">36°</div>
-          <button
-            class="temperature-degree"
-            value="C"
-          >
-            C
-          </button>
-          <img
-            class="weather-icon"
-            id="icon"
-            src="assets/weather/64x64/day/113.png"
-          />
+          <div class="temperature-reading skeleton-text" aria-label="Temperature">--°</div>
+          <button class="temperature-degree" value="C" aria-label="Switch to Fahrenheit">C</button>
+          <img class="weather-icon" id="icon"
+               src="/assets/weather/64x64/day/113.png"
+               alt="Weather condition icon" width="64" height="64" />
         </div>
       </section>
+
+      <!-- ── Feels like + description + AQI ───────────────────────────── -->
       <section class="real-feel-weather">
-        <div class="temp-dn-rf">
-          <div class="temperature-real-feel">Feels like 40°C</div>
-        </div>
+        <div class="temperature-real-feel skeleton-text" aria-label="Feels like temperature">Feels like --°C</div>
         <div class="weather">
-          <div class="weather-description"></div>
+          <div class="weather-description skeleton-text" aria-label="Weather description">Loading...</div>
         </div>
+        <div class="aqi-badge" id="aqi-badge" role="status" aria-label="Air quality index"></div>
       </section>
-      <section class="summary">
+
+      <!-- ── Stats ─────────────────────────────────────────────────────── -->
+      <section class="summary" aria-label="Weather statistics">
         <div class="forecast">
-          <div class="humidity">
-            <div class="humidity-title">Humidity</div>
-            <div class="humidity-value">34%</div>
+          <div class="stat-item">
+            <div class="stat-title">Humidity</div>
+            <div class="humidity-value stat-value skeleton-text" aria-label="Humidity">--%</div>
           </div>
-          <div class="wind">
-            <div class="wind-title">Wind</div>
-            <div class="wind-value">0 kph</div>
+          <div class="stat-item">
+            <div class="stat-title">Wind</div>
+            <div class="wind-value stat-value skeleton-text" aria-label="Wind speed">-- kph</div>
           </div>
-          <div class="pressure">
-            <div class="pressure-title">Pressure</div>
-            <div class="pressure-value">988 mb</div>
+          <div class="stat-item">
+            <div class="stat-title">Pressure</div>
+            <div class="pressure-value stat-value skeleton-text" aria-label="Pressure">-- mb</div>
           </div>
         </div>
       </section>
+
+      <!-- ── 5-Day Forecast ────────────────────────────────────────────── -->
+      <section class="forecast-section" aria-label="5-day forecast">
+        <h2 class="forecast-title">5-Day Forecast</h2>
+        <div class="forecast-cards" id="forecast-cards" role="list">
+          <div class="forecast-card skeleton-card" role="listitem" aria-label="Loading forecast"></div>
+          <div class="forecast-card skeleton-card" role="listitem" aria-label="Loading forecast"></div>
+          <div class="forecast-card skeleton-card" role="listitem" aria-label="Loading forecast"></div>
+          <div class="forecast-card skeleton-card" role="listitem" aria-label="Loading forecast"></div>
+          <div class="forecast-card skeleton-card" role="listitem" aria-label="Loading forecast"></div>
+        </div>
+      </section>
+
     </main>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="module" src="app.js"></script>
+
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

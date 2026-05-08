@@ -1,22 +1,18 @@
-// Vercel Serverless Function: /api/weather
-import fetch from 'node-fetch';
-
+// Vercel Serverless Function: GET /api/weather?city=<name>
 export default async function handler(req, res) {
-  const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
-  const WEATHER_API_BASE = 'https://api.weatherapi.com/v1/current.json?';
   const { city } = req.query;
-  if (!city) {
-    return res.status(400).json({ error: 'City is required' });
-  }
+  if (!city) return res.status(400).json({ error: 'city is required' });
+
+  const key = process.env.WEATHER_API_KEY;
+  const url = `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${encodeURIComponent(city)}&days=5&aqi=yes&alerts=no`;
+
   try {
-    const url = `${WEATHER_API_BASE}key=${WEATHER_API_KEY}&q=${encodeURIComponent(city)}&aqi=yes`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Weather API error' });
-    }
-    const data = await response.json();
+    const upstream = await fetch(url);
+    const data = await upstream.json();
+    if (!upstream.ok) return res.status(upstream.status).json(data);
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=300');
     res.status(200).json(data);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
 }

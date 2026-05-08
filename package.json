@@ -1,15 +1,29 @@
 {
-  "name": "instant-weather-backend",
-  "version": "1.0.0",
-  "main": "server.js",
-  "type": "commonjs",
+  "name": "instant-weather",
+  "version": "2.0.0",
+  "description": "Real-time weather app with 5-day forecast, AQI, and PWA support.",
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "start": "node server.cjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "node-fetch": "^2.6.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "cors": "^2.8.5"
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "@vitest/coverage-v8": "^1.6.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "^1.6.0"
   }
 }
