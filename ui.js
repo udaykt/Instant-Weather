@@ -19,13 +19,13 @@ export function displayResults(weather, tempState, hideLoading) {
   if (!city) console.error('[displayResults] .city element not found');
   if (!country) console.error('[displayResults] .country element not found');
   if (!weatherDescElem) console.error('[displayResults] .weather-description element not found');
-  city.innerHTML = `${weather.location.name}`;
-  country.innerHTML = `${weather.location.country}`;
+  city.textContent = weather.location.name;
+  country.textContent = weather.location.country;
   if (weatherDescElem) {
     if (weather.current.condition && weather.current.condition.text) {
-      weatherDescElem.innerHTML = weather.current.condition.text;
+      weatherDescElem.textContent = weather.current.condition.text;
     } else {
-      weatherDescElem.innerHTML = 'N/A';
+      weatherDescElem.textContent = 'N/A';
       console.error('[displayResults] weather.current.condition.text missing:', weather.current.condition);
     }
   }
@@ -138,12 +138,19 @@ export function displayResults(weather, tempState, hideLoading) {
   const temperature = document.querySelector('.temperature-reading');
   const hi_low = document.querySelector('.temperature-real-feel');
 
-  temperature.innerHTML = `${Math.round(weather.current.temp_c)}°`;
+  temperature.textContent = `${Math.round(weather.current.temp_c)}°`;
   tempState.temp_c = Math.round(weather.current.temp_c);
   tempState.temp_f = Math.round(weather.current.temp_f);
-  hi_low.innerHTML = `Feels like ${Math.round(weather.current.feelslike_c)}°C`;
+  hi_low.textContent = `Feels like ${Math.round(weather.current.feelslike_c)}°C`;
   tempState.hi_low_c = Math.round(weather.current.feelslike_c);
   tempState.hi_low_f = Math.round(weather.current.feelslike_f);
+
+  // Update weather icon from API
+  const iconElem = document.getElementById('icon');
+  if (iconElem && weather.current.condition && weather.current.condition.icon) {
+    iconElem.src = 'https:' + weather.current.condition.icon;
+    iconElem.alt = weather.current.condition.text || 'Weather icon';
+  }
 
   // Update humidity, wind, and pressure in summary
   const humidityElem = document.querySelector('.humidity-value');
@@ -167,12 +174,12 @@ export function getMetric(m, tempState) {
   const hi_low = document.querySelector('.temperature-real-feel');
   if (m === 'C') {
     metric.value = 'F';
-    metric.innerHTML = 'F';
+    metric.textContent = 'F';
     temperature.textContent = `${tempState.temp_f}°`;
     hi_low.textContent = `Feels like ${tempState.hi_low_f}°F`;
   } else {
     metric.value = 'C';
-    metric.innerHTML = 'C';
+    metric.textContent = 'C';
     temperature.textContent = `${tempState.temp_c}°`;
     hi_low.textContent = `Feels like ${tempState.hi_low_c}°C`;
   }

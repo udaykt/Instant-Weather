@@ -97,7 +97,7 @@ header {
   font-family: Gilroy-Bold;
   font-size: 18px;
   font-weight: 500;
-  transition: 0.3 ease-out;
+  transition: 0.3s ease-out;
 }
 .search-box::placeholder {
   color: #444;
@@ -131,7 +131,7 @@ header {
   border: 0px solid rgba(255, 255, 255, 0.6);
   border-radius: 18px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 16px 20px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.5 ease-out;
+  transition: 0.5s ease-out;
   cursor: pointer;
 }
 .search-button:hover {

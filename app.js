@@ -53,7 +53,9 @@ function currentLocation() {
     navigator.geolocation.getCurrentPosition(success, geoError);
   } else {
     // Fallback: use default city if geolocation is not available
-    getResultsByCity('Hyderabad').then(displayResults).catch(showError);
+    getResultsByCity('Hyderabad').then(weather => {
+      displayResults(weather, tempState, hideLoading);
+    }).catch(err => showError(err));
   }
 }
 
@@ -76,70 +78,20 @@ function geoError(error) {
 function setQuery(event) {
   if (event.keyCode === 13) {
     getResultsByCity(searchbox.value).then(weather => {
-      displayResults(weather, tempState);
-    }).catch(showError);
+      displayResults(weather, tempState, hideLoading);
+    }).catch(err => showError(err));
   }
 }
 
 function showError(err) {
-  // Optionally show error to user in the UI
-  alert('Could not fetch weather data. Please try again later.');
   console.error('Weather fetch error:', err);
+  hideLoading();
+  const cityElem = document.querySelector('.location .city');
+  const countryElem = document.querySelector('.location .country');
+  const descElem = document.querySelector('.weather-description');
+  if (cityElem) cityElem.textContent = 'City not found';
+  if (countryElem) countryElem.textContent = '';
+  if (descElem) descElem.textContent = 'Please try a different city name.';
 }
 
-const times_of_day = {
-  early_morning: {
-    name: "Early Morning",
-    value: "background-image: linear-gradient(to bottom, #D38312, #A83279);",
-  },
-  dawn: {
-    name: "Dawn",
-    value: "background-image: linear-gradient(to bottom, #ff4b1f, #1fddff);",
-  },
-  morning: {
-    name: "Morning",
-    value: "background-image: linear-gradient(to bottom, #E5E5BE, #003973);",
-  },
-  late_morning: {
-    name: "Late Morning",
-    value: "background-image: linear-gradient(to bottom, #00d2ff, #928DAB);",
-  },
-  afternoon: {
-    name: "Afternoon",
-    value: "background-image: linear-gradient(to bottom, #c0c0aa, #1cefff);",
-  },
-  late_afternoon: {
-    name: "Late Afternoon",
-    value: "background-image: linear-gradient(to bottom, #2196f3, #f44336);",
-  },
-  early_evening: {
-    name: "Early Evening",
-    value:
-      "background-image: linear-gradient(to bottom, #833ab4, #fd1d1d, #fcb045);",
-  },
-  evening: {
-    name: "Evening",
-    value: "background-image: linear-gradient(to bottom, #434343, #000000);",
-  },
-  dusk: {
-    name: "Dusk",
-    value: "background-image: linear-gradient(to bottom, #BA8B02, #181818);",
-  },
-  night: {
-    name: "Night",
-    value: "background-image: linear-gradient(to bottom, #9a8478, #1e130c);",
-  },
-  midnight: {
-    name: "Midnight",
-    value: "background-image: linear-gradient(to bottom, #414345, #232526);",
-  },
-  middle_of_the_night: {
-    name: "Middle of the Night",
-    value: "background-image: linear-gradient(to bottom, #190A05, #870000);",
-  },
-  default: {
-    name: "",
-    value: "background-image: linear-gradient(to bottom, #4286f4, #373B44);",
-  },
-};
 
