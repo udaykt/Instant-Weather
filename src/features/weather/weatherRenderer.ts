@@ -106,6 +106,8 @@ export function renderForecast(
 
   qs<HTMLDivElement>('.temperature-reading').textContent = `${temp_c}°`;
   qs<HTMLDivElement>('.temperature-real-feel').textContent = `Feels like ${feelslike_c}°C`;
+  const feelslikeStatEl = qsMaybe<HTMLElement>('.feelslike-stat-value');
+  if (feelslikeStatEl) feelslikeStatEl.textContent = `${feelslike_c}°C`;
   Object.assign(currentConditions, { temp_c, temp_f, feelslike_c, feelslike_f });
 
   // Always reset unit toggle to C on new city data

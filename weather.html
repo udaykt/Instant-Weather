@@ -156,6 +156,29 @@
           <div class="aqi-badge" id="aqi-badge" role="status" aria-label="Air quality index"></div>
         </section>
 
+        <!-- Sunrise & Sunset -->
+        <section class="sun-times" aria-label="Sunrise and sunset">
+          <div class="sun-time-item">
+            <span class="sun-time-icon" aria-hidden="true">🌅</span>
+            <div class="sun-time-body">
+              <span class="sun-time-label">Sunrise</span>
+              <span class="sun-time-value sunrise-value skeleton-text" aria-label="Sunrise"
+                >--:--</span
+              >
+            </div>
+          </div>
+          <div class="sun-divider" aria-hidden="true"></div>
+          <div class="sun-time-item">
+            <span class="sun-time-icon" aria-hidden="true">🌇</span>
+            <div class="sun-time-body">
+              <span class="sun-time-label">Sunset</span>
+              <span class="sun-time-value sunset-value skeleton-text" aria-label="Sunset"
+                >--:--</span
+              >
+            </div>
+          </div>
+        </section>
+
         <!-- Today highlights strip -->
         <section class="today-highlights" aria-label="Today's key stats">
           <div class="today-pill">
@@ -185,6 +208,38 @@
               <span class="today-pill-val center-vis-val skeleton-text">-- km</span>
               <span class="today-pill-label">Visibility</span>
             </div>
+          </div>
+        </section>
+
+        <!-- 5-Day Forecast -->
+        <section class="forecast-section" aria-label="5-day forecast">
+          <h2 class="section-label">5-Day Forecast</h2>
+          <div class="forecast-cards" id="forecast-cards" role="list">
+            <div
+              class="forecast-card skeleton-card"
+              role="listitem"
+              aria-label="Loading forecast"
+            ></div>
+            <div
+              class="forecast-card skeleton-card"
+              role="listitem"
+              aria-label="Loading forecast"
+            ></div>
+            <div
+              class="forecast-card skeleton-card"
+              role="listitem"
+              aria-label="Loading forecast"
+            ></div>
+            <div
+              class="forecast-card skeleton-card"
+              role="listitem"
+              aria-label="Loading forecast"
+            ></div>
+            <div
+              class="forecast-card skeleton-card"
+              role="listitem"
+              aria-label="Loading forecast"
+            ></div>
           </div>
         </section>
       </main>
@@ -230,9 +285,11 @@
           </div>
 
           <div class="stat-tile">
-            <span class="stat-tile-label">Sunrise</span>
-            <span class="stat-tile-value sunrise-value skeleton-text" aria-label="Sunrise time"
-              >--:--</span
+            <span class="stat-tile-label">Feels Like</span>
+            <span
+              class="stat-tile-value feelslike-stat-value skeleton-text"
+              aria-label="Feels like temperature"
+              >--°C</span
             >
           </div>
 
@@ -269,46 +326,7 @@
               >
             </div>
           </div>
-
-          <div class="stat-tile">
-            <span class="stat-tile-label">Sunset</span>
-            <span class="stat-tile-value sunset-value skeleton-text" aria-label="Sunset time"
-              >--:--</span
-            >
-          </div>
         </div>
-
-        <!-- 5-Day Forecast -->
-        <section class="forecast-section" aria-label="5-day forecast">
-          <h2 class="section-label">5-Day Forecast</h2>
-          <div class="forecast-cards" id="forecast-cards" role="list">
-            <div
-              class="forecast-card skeleton-card"
-              role="listitem"
-              aria-label="Loading forecast"
-            ></div>
-            <div
-              class="forecast-card skeleton-card"
-              role="listitem"
-              aria-label="Loading forecast"
-            ></div>
-            <div
-              class="forecast-card skeleton-card"
-              role="listitem"
-              aria-label="Loading forecast"
-            ></div>
-            <div
-              class="forecast-card skeleton-card"
-              role="listitem"
-              aria-label="Loading forecast"
-            ></div>
-            <div
-              class="forecast-card skeleton-card"
-              role="listitem"
-              aria-label="Loading forecast"
-            ></div>
-          </div>
-        </section>
       </aside>
     </div>
     <!-- /.weather-app -->
