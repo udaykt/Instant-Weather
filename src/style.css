@@ -891,34 +891,91 @@ body::before {
   color: rgba(255, 255, 255, 0.55);
 }
 
-/* ── Forecast section ───────────────────────────────────────────────────── */
+/* ── Sunrise / Sunset row (center panel) ───────────────────────────────── */
+.sun-times {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+  transition:
+    background 0.9s ease,
+    border-color 0.9s ease;
+}
+
+.sun-time-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+
+.sun-time-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.sun-time-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sun-time-label {
+  font-size: 11px;
+  font-family: Gilroy-Bold, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sun-time-value {
+  font-family: Gilroy-Heavy, sans-serif;
+  font-size: 22px;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  min-height: 28px;
+}
+
+.sun-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+
+/* ── Forecast section (center panel) ───────────────────────────────────── */
 .forecast-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex: 1;
+  gap: 10px;
+  width: 100%;
 }
 
-/* Row-style forecast cards (for the right rail) */
+/* Always 5-column horizontal grid */
 .forecast-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
 }
 
 .forecast-card {
-  display: grid;
-  grid-template-columns: 42px 32px 1fr auto;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 12px 14px;
+  text-align: center;
+  padding: 14px 8px 12px;
   border-radius: 14px;
   background: var(--tile-bg);
   border: 1px solid var(--tile-border);
   color: #fff;
-  flex: 1;
-  min-height: 70px;
+  min-height: 130px;
+  gap: 5px;
   position: relative;
   overflow: hidden;
   transition:
@@ -927,22 +984,22 @@ body::before {
     transform 0.2s ease;
 }
 .forecast-card:hover {
-  background: rgba(255, 255, 255, 0.13);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateX(-3px);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-4px);
 }
 
 .forecast-day {
   font-size: 13px;
   font-family: Gilroy-Bold, sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   color: rgba(255, 255, 255, 0.75);
 }
 
 .forecast-icon {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
 }
 
@@ -950,17 +1007,19 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  align-items: center;
+  width: 100%;
   overflow: hidden;
-  flex: 1;
 }
 
 .forecast-desc {
-  font-size: 12px;
+  font-size: 11px;
   font-family: Gilroy-Medium, sans-serif;
-  color: rgba(255, 255, 255, 0.6);
-  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.58);
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .forecast-rain {
@@ -972,20 +1031,21 @@ body::before {
 .forecast-right {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
+  align-items: center;
+  gap: 1px;
+  margin-top: auto;
 }
 
 .forecast-temps {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 4px;
-  font-size: 15px;
   white-space: nowrap;
 }
 
 .forecast-high {
   font-family: Gilroy-Heavy, sans-serif;
+  font-size: 16px;
   color: #fff;
 }
 .forecast-low {
@@ -995,46 +1055,10 @@ body::before {
 }
 
 .forecast-wind {
-  font-size: 11px;
+  font-size: 10px;
   font-family: Gilroy-Medium, sans-serif;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.38);
   white-space: nowrap;
-}
-
-/* Mobile: revert to grid layout when stats rail stacks below main */
-@media (max-width: 1023px) {
-  .forecast-cards {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-  }
-  .forecast-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 12px 6px;
-    min-height: 120px;
-    gap: 4px;
-    transform: none !important;
-  }
-  .forecast-card:hover {
-    background: rgba(255, 255, 255, 0.11);
-    transform: translateY(-3px) !important;
-  }
-  .forecast-meta {
-    align-items: center;
-  }
-  .forecast-right {
-    align-items: center;
-  }
-  .forecast-wind {
-    display: none;
-  }
-  .forecast-temps {
-    flex-direction: column;
-    gap: 1px;
-  }
 }
 
 @media (max-width: 520px) {
