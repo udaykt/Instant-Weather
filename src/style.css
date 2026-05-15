@@ -164,11 +164,11 @@ body::before {
 @media (min-width: 1024px) {
   .weather-app {
     grid-template-areas: 'sidebar main stats';
-    grid-template-columns: 250px 1fr 285px;
+    grid-template-columns: 275px 1fr 315px;
     grid-template-rows: 1fr;
     align-items: start;
     padding: 20px;
-    max-width: 1380px;
+    max-width: 1440px;
     margin: 0 auto;
   }
 }
@@ -195,7 +195,6 @@ body::before {
   flex-direction: column;
   gap: 16px;
   position: relative;
-  overflow: hidden;
   transition:
     border-color 0.9s ease,
     box-shadow 0.9s ease;
@@ -207,11 +206,25 @@ body::before {
     top: 20px;
     min-height: calc(100vh - 40px);
     max-height: calc(100vh - 40px);
+    overflow: hidden;
     overflow-y: auto;
     scrollbar-width: none;
   }
   .sidebar::-webkit-scrollbar {
     display: none;
+  }
+  /* Scroll-fade hint at bottom */
+  .sidebar::after {
+    content: '';
+    position: sticky;
+    bottom: 0;
+    display: block;
+    height: 36px;
+    margin-top: -36px;
+    background: linear-gradient(to top, hsla(var(--cond-hue), 30%, 10%, 0.65) 0%, transparent 100%);
+    pointer-events: none;
+    border-radius: 0 0 24px 24px;
+    flex-shrink: 0;
   }
 }
 
@@ -223,12 +236,15 @@ body::before {
 .search-wrapper {
   position: relative;
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 
 .search-box {
   flex: 1;
+  min-width: 0;
   padding: 11px 16px;
+  height: 44px;
   border: none;
   outline: none;
   background: rgba(255, 255, 255, 0.1);
@@ -255,8 +271,8 @@ body::before {
 }
 
 .search-button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.12);
   outline: none;
@@ -395,20 +411,20 @@ body::before {
 
 .qc-skeleton {
   flex: 1;
-  min-height: 52px;
+  min-height: 64px;
   border-radius: 14px;
 }
 
 /* Quick city card button */
 .quick-city-card {
   display: grid;
-  grid-template-columns: 38px 1fr auto;
+  grid-template-columns: 42px 1fr auto;
   align-items: center;
   gap: 10px;
   width: 100%;
   flex: 1;
-  min-height: 52px;
-  padding: 12px 14px;
+  min-height: 64px;
+  padding: 14px 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.06);
@@ -432,8 +448,8 @@ body::before {
 }
 
 .qc-icon {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
@@ -446,7 +462,7 @@ body::before {
 
 .qc-name {
   font-family: Gilroy-Bold, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -463,7 +479,7 @@ body::before {
 
 .qc-temp {
   font-family: Gilroy-Heavy, sans-serif;
-  font-size: 20px;
+  font-size: 22px;
   color: #fff;
   white-space: nowrap;
 }
@@ -649,7 +665,6 @@ body::before {
   flex-direction: column;
   gap: 12px;
   position: relative;
-  overflow: hidden;
   transition:
     border-color 0.9s ease,
     box-shadow 0.9s ease;
@@ -661,11 +676,25 @@ body::before {
     top: 20px;
     min-height: calc(100vh - 40px);
     max-height: calc(100vh - 40px);
+    overflow: hidden;
     overflow-y: auto;
     scrollbar-width: none;
   }
   .stats-rail::-webkit-scrollbar {
     display: none;
+  }
+  /* Scroll-fade hint at bottom */
+  .stats-rail::after {
+    content: '';
+    position: sticky;
+    bottom: 0;
+    display: block;
+    height: 48px;
+    margin-top: -48px;
+    background: linear-gradient(to top, hsla(var(--cond-hue), 30%, 10%, 0.7) 0%, transparent 100%);
+    pointer-events: none;
+    border-radius: 0 0 24px 24px;
+    flex-shrink: 0;
   }
 }
 
@@ -673,7 +702,7 @@ body::before {
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-auto-rows: minmax(72px, auto);
+  grid-auto-rows: minmax(82px, auto);
   gap: 8px;
 }
 
@@ -681,11 +710,11 @@ body::before {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-height: 72px;
+  min-height: 82px;
   position: relative;
   overflow: hidden;
   transition:
@@ -714,10 +743,10 @@ body::before {
 
 .stat-tile-value {
   font-family: Gilroy-Heavy, sans-serif;
-  font-size: 26px;
+  font-size: 28px;
   color: #fff;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
-  min-height: 34px;
+  min-height: 36px;
 }
 
 .stat-tile-main {
@@ -792,7 +821,7 @@ body::before {
   border: 1px solid rgba(255, 255, 255, 0.09);
   color: #fff;
   flex: 1;
-  min-height: 60px;
+  min-height: 64px;
   position: relative;
   overflow: hidden;
   transition:
@@ -1103,33 +1132,63 @@ body.home {
   animation-delay: -5.75s;
 }
 
-/* ── Sidebar footer ─────────────────────────────────────────────────────── */
+/* ── Sidebar footer / brand ──────────────────────────────────────────────── */
 .sidebar-footer {
   margin-top: auto;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  opacity: 0.38;
-  transition: opacity 0.3s;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.25s ease;
 }
 .sidebar-footer:hover {
-  opacity: 0.65;
+  transform: translateY(-2px);
+}
+
+.sidebar-brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .sidebar-logo {
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 10px hsla(var(--cond-hue), 80%, 70%, 0.75))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  transition: filter 1.4s ease;
 }
 
-.sidebar-brand {
-  font-family: Gilroy-Bold, sans-serif;
-  font-size: 12px;
-  color: #fff;
-  letter-spacing: 0.3px;
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-brand-name {
+  display: block;
+  font-family: Gilroy-Heavy, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.15px;
+  background: linear-gradient(
+    125deg,
+    hsla(var(--cond-hue), 55%, 88%, 1) 0%,
+    #ffffff 55%,
+    hsla(calc(var(--cond-hue) + 30), 50%, 90%, 0.9) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: background 1.4s ease;
+}
+
+.sidebar-brand-tagline {
+  display: block;
+  font-family: Gilroy-Medium, sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
