@@ -17,7 +17,7 @@ export function initGlassHover(): void {
     });
 
   // Panels: wide 280px ambient glow that drifts across the whole panel
-  document.querySelectorAll<HTMLElement>('.sidebar, .stats-rail').forEach((panel) => {
+  document.querySelectorAll<HTMLElement>('.sidebar, .stats-rail, .main-panel').forEach((panel) => {
     panel.addEventListener('mousemove', (e: MouseEvent) => {
       const r = panel.getBoundingClientRect();
       panel.style.setProperty('--gx', `${e.clientX - r.left}px`);

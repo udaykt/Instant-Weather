@@ -34,11 +34,22 @@
 /* ── Base & aurora background ───────────────────────────────────────────── */
 :root {
   --cond-hue: 210;
-  --glass-bg: hsla(var(--cond-hue), 40%, 65%, 0.08);
-  --glass-border: hsla(var(--cond-hue), 60%, 85%, 0.15);
-  --glass-shadow: hsla(var(--cond-hue), 60%, 20%, 0.25);
-  --glass-inset: rgba(255, 255, 255, 0.18);
+  --glass-bg: hsla(var(--cond-hue), 42%, 62%, 0.11);
+  --glass-border: hsla(var(--cond-hue), 60%, 88%, 0.2);
+  --glass-shadow: hsla(var(--cond-hue), 60%, 20%, 0.28);
+  --glass-inset: rgba(255, 255, 255, 0.2);
+  --tile-bg: hsla(var(--cond-hue), 32%, 55%, 0.13);
+  --tile-border: hsla(var(--cond-hue), 50%, 82%, 0.2);
   transition: --cond-hue 1.4s ease;
+}
+
+/* Light daytime phases (dawn, morning, late morning, late afternoon) */
+body.light-bg {
+  --glass-bg: rgba(6, 10, 24, 0.54);
+  --glass-border: rgba(255, 255, 255, 0.24);
+  --glass-shadow: rgba(0, 0, 0, 0.38);
+  --tile-bg: rgba(6, 10, 24, 0.42);
+  --tile-border: rgba(255, 255, 255, 0.2);
 }
 
 body {
@@ -425,17 +436,17 @@ body::before {
   flex: 1;
   min-height: 64px;
   padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--tile-border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--tile-bg);
   color: #fff;
   cursor: pointer;
   text-align: left;
   position: relative;
   overflow: hidden;
   transition:
-    background 0.5s ease,
-    border-color 0.5s ease,
+    background 0.9s ease,
+    border-color 0.9s ease,
     transform 0.2s ease;
 }
 .quick-city-card:hover {
@@ -494,11 +505,30 @@ body::before {
 /* ── Main Panel ─────────────────────────────────────────────────────────── */
 .main-panel {
   grid-area: main;
+  background:
+    radial-gradient(
+      circle 480px at var(--gx, -500px) var(--gy, -500px),
+      rgba(255, 255, 255, 0.04) 0%,
+      transparent 60%
+    ),
+    var(--glass-bg);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow:
+    0 8px 40px var(--glass-shadow),
+    inset 0 1px 0 var(--glass-inset);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 28px 20px 20px;
   min-height: 420px;
+  position: relative;
+  transition:
+    background 0.9s ease,
+    border-color 0.9s ease,
+    box-shadow 0.9s ease;
 }
 @media (min-width: 1024px) {
   .main-panel {
@@ -639,13 +669,14 @@ body::before {
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
   border-radius: 18px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition:
-    background 0.35s ease,
+    background 0.9s ease,
+    border-color 0.9s ease,
     transform 0.2s ease;
 }
 .today-pill:hover {
@@ -678,10 +709,10 @@ body::before {
 
 .today-pill-label {
   font-family: Gilroy-Medium, sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
   white-space: nowrap;
 }
 
@@ -790,8 +821,8 @@ body::before {
 }
 
 .stat-tile {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
   border-radius: 16px;
   padding: 16px 18px;
   display: flex;
@@ -801,8 +832,8 @@ body::before {
   position: relative;
   overflow: hidden;
   transition:
-    background 0.5s ease,
-    border-color 0.5s ease,
+    background 0.9s ease,
+    border-color 0.9s ease,
     box-shadow 0.5s ease,
     transform 0.2s ease;
 }
@@ -817,11 +848,11 @@ body::before {
 }
 
 .stat-tile-label {
-  font-size: 12px;
+  font-size: 11px;
   font-family: Gilroy-Bold, sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.9px;
-  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .stat-tile-value {
@@ -837,7 +868,7 @@ body::before {
 /* Sunrise / sunset time values are long — use a slightly smaller size */
 .sunrise-value,
 .sunset-value {
-  font-size: 20px;
+  font-size: 22px;
   letter-spacing: -0.3px;
 }
 
@@ -904,21 +935,21 @@ body::before {
 
 .forecast-card {
   display: grid;
-  grid-template-columns: 38px 30px 1fr auto;
+  grid-template-columns: 42px 32px 1fr auto;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
   color: #fff;
   flex: 1;
-  min-height: 64px;
+  min-height: 70px;
   position: relative;
   overflow: hidden;
   transition:
-    background 0.5s ease,
-    border-color 0.5s ease,
+    background 0.9s ease,
+    border-color 0.9s ease,
     transform 0.2s ease;
 }
 .forecast-card:hover {
@@ -928,11 +959,11 @@ body::before {
 }
 
 .forecast-day {
-  font-size: 11px;
+  font-size: 13px;
   font-family: Gilroy-Bold, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .forecast-icon {
@@ -950,18 +981,18 @@ body::before {
 }
 
 .forecast-desc {
-  font-size: 10px;
+  font-size: 12px;
   font-family: Gilroy-Medium, sans-serif;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .forecast-rain {
-  font-size: 10px;
+  font-size: 11px;
   font-family: Gilroy-Medium, sans-serif;
-  color: rgba(120, 180, 255, 0.85);
+  color: rgba(140, 195, 255, 0.9);
 }
 
 .forecast-right {
@@ -975,7 +1006,7 @@ body::before {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 13px;
+  font-size: 15px;
   white-space: nowrap;
 }
 
@@ -985,14 +1016,14 @@ body::before {
 }
 .forecast-low {
   font-family: Gilroy-Medium, sans-serif;
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
 }
 
 .forecast-wind {
-  font-size: 9px;
+  font-size: 11px;
   font-family: Gilroy-Medium, sans-serif;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.42);
   white-space: nowrap;
 }
 
