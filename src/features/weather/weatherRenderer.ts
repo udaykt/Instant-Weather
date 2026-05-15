@@ -77,6 +77,7 @@ export function renderForecast(
   const hour = Number(timePart.split(':')[0]);
   const daytimePhase = getDaytimePhase(hour);
   document.body.style.backgroundImage = daytimePhase.gradient;
+  document.body.classList.toggle('light-bg', daytimePhase.isLight);
 
   // ── Location ─────────────────────────────────────────────────────────────
   qs<HTMLSpanElement>('.city').textContent = location.name;
@@ -171,11 +172,14 @@ export function renderForecast(
   }
 
   // ── Center today highlights ───────────────────────────────────────────────
-  const centerWind = qsMaybe<HTMLElement>('.center-wind-val');
-  if (centerWind) centerWind.textContent = `${current.wind_kph} kph ${current.wind_dir}`;
+  const centerUV = qsMaybe<HTMLElement>('.center-uv-val');
+  if (centerUV) {
+    const uv = Math.round(current.uv);
+    centerUV.textContent = `${uv} · ${uvLabel(uv).text}`;
+  }
 
-  const centerHumidity = qsMaybe<HTMLElement>('.center-humidity-val');
-  if (centerHumidity) centerHumidity.textContent = `${current.humidity}%`;
+  const centerVis = qsMaybe<HTMLElement>('.center-vis-val');
+  if (centerVis) centerVis.textContent = `${current.vis_km} km`;
 
   if (forecast?.forecastday?.[0]) {
     const todayDay = forecast.forecastday[0].day;
