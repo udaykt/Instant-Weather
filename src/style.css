@@ -224,19 +224,6 @@ body::before {
   .sidebar::-webkit-scrollbar {
     display: none;
   }
-  /* Scroll-fade hint at bottom */
-  .sidebar::after {
-    content: '';
-    position: sticky;
-    bottom: 0;
-    display: block;
-    height: 32px;
-    margin-top: -32px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.14) 0%, transparent 100%);
-    pointer-events: none;
-    border-radius: 0 0 24px 24px;
-    flex-shrink: 0;
-  }
 }
 
 /* ── Search ─────────────────────────────────────────────────────────────── */
@@ -796,19 +783,6 @@ body::before {
   }
   .stats-rail::-webkit-scrollbar {
     display: none;
-  }
-  /* Scroll-fade hint at bottom */
-  .stats-rail::after {
-    content: '';
-    position: sticky;
-    bottom: 0;
-    display: block;
-    height: 40px;
-    margin-top: -40px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.14) 0%, transparent 100%);
-    pointer-events: none;
-    border-radius: 0 0 24px 24px;
-    flex-shrink: 0;
   }
 }
 
