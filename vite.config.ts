@@ -115,6 +115,7 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: 'node',
       globals: true,
+      pool: 'forks',
       exclude: ['node_modules/**', 'tests/e2e/**'],
       environmentMatchGlobs: [['tests/ui.test.ts', 'happy-dom']],
     },
