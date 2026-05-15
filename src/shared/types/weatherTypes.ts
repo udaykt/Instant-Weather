@@ -19,6 +19,7 @@ export interface AirQuality {
 export interface CurrentWeather {
   temp_c: number;
   temp_f: number;
+  is_day?: number;
   feelslike_c: number;
   feelslike_f: number;
   humidity: number;
@@ -33,6 +34,20 @@ export interface CurrentWeather {
   vis_km: number;
   condition: WeatherCondition;
   air_quality?: AirQuality;
+}
+
+export interface HourData {
+  time: string;
+  temp_c: number;
+  temp_f: number;
+  condition: WeatherCondition;
+  wind_kph: number;
+  precip_mm: number;
+  humidity: number;
+  uv: number;
+  chance_of_rain: number;
+  chance_of_snow: number;
+  is_day: number;
 }
 
 export interface ForecastDay {
@@ -53,6 +68,13 @@ export interface ForecastDay {
     sunset: string;
     moon_phase: string;
   };
+  hour?: HourData[];
+}
+
+export interface Alert {
+  headline: string;
+  severity: string;
+  desc: string;
 }
 
 export interface WeatherLocation {
@@ -67,6 +89,9 @@ export interface WeatherResponse {
   current: CurrentWeather;
   forecast?: {
     forecastday: ForecastDay[];
+  };
+  alerts?: {
+    alert: Alert[];
   };
 }
 

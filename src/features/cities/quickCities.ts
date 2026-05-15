@@ -29,9 +29,12 @@ function getRecentCities(): string[] {
   }
 }
 
-// Build ordered list: recents first, then popular cities (no duplicates), capped at 5
+// Build ordered list: other recents, then popular cities (no duplicates), capped
+// at 5. recent[0] is the city currently being viewed (trackRecentCity unshifts
+// it on every successful fetch) — drop it so the active city is never offered
+// as a shortcut to itself.
 function buildCityList(): string[] {
-  const recent = getRecentCities();
+  const recent = getRecentCities().slice(1);
   const recentLower = new Set(recent.map((c) => c.toLowerCase()));
   const extras = POPULAR_DEFAULTS.filter((c) => !recentLower.has(c.toLowerCase()));
   return [...recent, ...extras].slice(0, 5);
@@ -42,6 +45,7 @@ function renderCard(
     name: string;
     country: string;
     temp_c: number;
+    temp_f: number;
     condition: { text: string; icon: string };
   },
   onSelect: (city: string) => void,
@@ -78,7 +82,11 @@ function renderCard(
 
   const temp = document.createElement('span');
   temp.className = 'qc-temp';
-  temp.textContent = `${Math.round(data.temp_c)}°`;
+  // Carry both units so the global toggle can re-render without re-fetching
+  temp.dataset.c = String(data.temp_c);
+  temp.dataset.f = String(data.temp_f);
+  const unit = localStorage.getItem('tempUnit') === 'F' ? 'F' : 'C';
+  temp.textContent = `${Math.round(unit === 'F' ? data.temp_f : data.temp_c)}°`;
 
   btn.appendChild(icon);
   btn.appendChild(info);
@@ -112,6 +120,7 @@ export async function initQuickCities(
           name: location.name,
           country: location.country,
           temp_c: current.temp_c,
+          temp_f: current.temp_f,
           condition: current.condition,
         },
         onSelect,
