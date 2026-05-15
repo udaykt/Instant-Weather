@@ -111,55 +111,173 @@
 
       <!-- ── Main Weather Panel ───────────────────────────────────────────── -->
       <main class="main-panel" id="main-block" aria-live="polite" aria-busy="true">
-        <!-- Location & date -->
-        <section class="loc-date" aria-label="Location and time">
-          <div class="location">
-            <span class="city skeleton-text" aria-label="City">City Name</span
-            ><span class="sep">,&nbsp;</span
-            ><span class="country skeleton-text" aria-label="Country">Country</span>
-          </div>
-          <div class="date-time">
-            <span class="date skeleton-text">Loading date...</span>
-            <span class="time skeleton-text">&nbsp;00:00</span>
-          </div>
-          <div class="part-of-day skeleton-text" aria-label="Time of day">Time of day</div>
-        </section>
+        <!-- Alerts banner container -->
+        <div class="alerts-container" id="alerts-container"></div>
 
-        <!-- Temperature -->
-        <section class="temperature" aria-label="Current temperature">
-          <div class="temp-icon">
-            <div class="temperature-reading skeleton-text" aria-label="Temperature">--°</div>
-            <button class="temperature-degree" value="C" aria-label="Switch temperature unit">
-              C
-            </button>
-            <img
-              class="weather-icon"
-              id="icon"
-              src="/assets/weather/64x64/day/113.png"
-              alt="Weather condition icon"
-              width="64"
-              height="64"
-            />
-          </div>
-        </section>
-
-        <!-- Feels like + description + AQI -->
-        <section class="real-feel-weather">
-          <div class="temperature-real-feel skeleton-text" aria-label="Feels like temperature">
-            Feels like --°C
-          </div>
-          <div class="weather">
-            <div class="weather-description skeleton-text" aria-label="Weather description">
-              Loading...
+        <!-- Center header: location left, date + time pills + share right -->
+        <div class="center-header" aria-label="Location and time">
+          <div class="location-chip">
+            <svg
+              class="pin-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"
+              />
+            </svg>
+            <div class="location-text">
+              <span class="city skeleton-text" aria-label="City">City Name</span
+              ><span class="sep">,&nbsp;</span
+              ><span class="country skeleton-text" aria-label="Country">Country</span>
             </div>
           </div>
-          <div class="aqi-badge" id="aqi-badge" role="status" aria-label="Air quality index"></div>
+          <div class="header-right">
+            <div class="dt-pills">
+              <div class="dt-pill">
+                <svg
+                  class="dt-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="date skeleton-text" aria-label="Date">Loading...</span>
+              </div>
+              <div class="dt-pill">
+                <svg
+                  class="dt-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <div class="time-stack">
+                  <span class="time skeleton-text" aria-label="Time">00:00</span>
+                  <span class="part-of-day skeleton-text" aria-label="Time of day">Loading</span>
+                </div>
+              </div>
+            </div>
+            <button class="share-btn" id="share-btn" aria-label="Share weather card">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" y1="2" x2="12" y2="15" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Temperature stage: icon · big temp · details, balanced horizontally -->
+        <section class="temp-stage" aria-label="Current temperature and conditions">
+          <div class="unit-toggle" role="group" aria-label="Temperature unit">
+            <svg
+              class="unit-toggle-ico"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0z" />
+            </svg>
+            <button class="unit-btn active" data-unit="C" aria-pressed="true">°C</button>
+            <button class="unit-btn" data-unit="F" aria-pressed="false">°F</button>
+          </div>
+
+          <div class="hero-row">
+            <div class="weather-icon-lottie" id="icon-lottie">
+              <img
+                class="weather-icon"
+                id="icon"
+                src="/assets/weather/64x64/day/113.png"
+                alt="Weather condition icon"
+                width="132"
+                height="132"
+              />
+            </div>
+            <div class="temperature-reading skeleton-text" aria-label="Temperature">--°</div>
+            <div class="hero-side">
+              <div class="weather">
+                <div class="weather-description skeleton-text" aria-label="Weather description">
+                  Loading...
+                </div>
+              </div>
+              <div class="today-hl-val skeleton-text" aria-label="High and low temperatures">
+                ↑--° ↓--°
+              </div>
+              <div class="temperature-real-feel skeleton-text" aria-label="Feels like temperature">
+                Feels like --°
+              </div>
+            </div>
+          </div>
+
+          <div class="chips-row">
+            <div class="aqi-wrap">
+              <div
+                class="aqi-badge"
+                id="aqi-badge"
+                role="button"
+                tabindex="0"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Air quality index — click for details"
+              ></div>
+              <div class="aqi-popover" id="aqi-popover" role="tooltip" hidden></div>
+            </div>
+            <div class="best-time-chip" id="best-time-hint"></div>
+          </div>
         </section>
 
-        <!-- Sunrise & Sunset -->
+        <!-- Sunrise & Sunset with sun arc -->
         <section class="sun-times" aria-label="Sunrise and sunset">
           <div class="sun-time-item">
-            <span class="sun-time-icon" aria-hidden="true">🌅</span>
+            <svg
+              class="sun-time-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 3v3M5.2 10.2 7 12M3 17h2M19 17h2M17 12l1.8-1.8M8 17a4 4 0 0 1 8 0" />
+              <path d="M2 21h20" />
+              <path d="m9 6 3-3 3 3" />
+            </svg>
             <div class="sun-time-body">
               <span class="sun-time-label">Sunrise</span>
               <span class="sun-time-value sunrise-value skeleton-text" aria-label="Sunrise"
@@ -167,9 +285,41 @@
               >
             </div>
           </div>
-          <div class="sun-divider" aria-hidden="true"></div>
+          <!-- Sun arc SVG replaces the plain divider -->
+          <svg class="sun-arc" viewBox="0 0 200 110" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="sunArcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ff9a3c" stop-opacity="0.7" />
+                <stop offset="50%" stop-color="#ffd060" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#ff6b9d" stop-opacity="0.7" />
+              </linearGradient>
+            </defs>
+            <!-- Semicircle arc: left (10,100) → top (100,10) → right (190,100) -->
+            <path
+              class="sun-arc-path"
+              d="M 10 100 Q 100 10 190 100"
+              fill="none"
+              stroke="url(#sunArcGrad)"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <circle class="sun-dot" id="sun-dot" cx="10" cy="100" r="6" />
+          </svg>
           <div class="sun-time-item">
-            <span class="sun-time-icon" aria-hidden="true">🌇</span>
+            <svg
+              class="sun-time-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5.2 10.2 7 12M3 17h2M19 17h2M17 12l1.8-1.8M8 17a4 4 0 0 1 8 0" />
+              <path d="M2 21h20" />
+              <path d="M12 6V3M9 5l3 3 3-3" />
+            </svg>
             <div class="sun-time-body">
               <span class="sun-time-label">Sunset</span>
               <span class="sun-time-value sunset-value skeleton-text" aria-label="Sunset"
@@ -179,41 +329,25 @@
           </div>
         </section>
 
-        <!-- Today highlights strip -->
-        <section class="today-highlights" aria-label="Today's key stats">
-          <div class="today-pill">
-            <span class="today-pill-icon" aria-hidden="true">🌡</span>
-            <div class="today-pill-body">
-              <span class="today-pill-val today-hl-val skeleton-text">-- / --</span>
-              <span class="today-pill-label">High / Low</span>
-            </div>
-          </div>
-          <div class="today-pill">
-            <span class="today-pill-icon" aria-hidden="true">🌧</span>
-            <div class="today-pill-body">
-              <span class="today-pill-val today-rain-val skeleton-text">--%</span>
-              <span class="today-pill-label">Rain Chance</span>
-            </div>
-          </div>
-          <div class="today-pill">
-            <span class="today-pill-icon" aria-hidden="true">🔆</span>
-            <div class="today-pill-body">
-              <span class="today-pill-val center-uv-val skeleton-text">--</span>
-              <span class="today-pill-label">UV Index</span>
-            </div>
-          </div>
-          <div class="today-pill">
-            <span class="today-pill-icon" aria-hidden="true">🌫</span>
-            <div class="today-pill-body">
-              <span class="today-pill-val center-vis-val skeleton-text">-- km</span>
-              <span class="today-pill-label">Visibility</span>
-            </div>
-          </div>
+        <!-- Hourly temperature sparkline -->
+        <section class="sparkline-section" aria-label="Today's temperature trend">
+          <svg
+            class="temp-sparkline"
+            id="temp-sparkline"
+            viewBox="0 0 300 60"
+            preserveAspectRatio="none"
+          ></svg>
         </section>
 
-        <!-- 5-Day Forecast -->
-        <section class="forecast-section" aria-label="5-day forecast">
-          <h2 class="section-label">5-Day Forecast</h2>
+        <!-- Forecast section with 5-day / Hourly toggle -->
+        <section class="forecast-section" aria-label="Weather forecast">
+          <div class="forecast-header">
+            <h2 class="section-label">Forecast</h2>
+            <div class="forecast-toggle" role="group" aria-label="Forecast type">
+              <button class="forecast-toggle-btn active" data-mode="5day">5-Day</button>
+              <button class="forecast-toggle-btn" data-mode="hourly">Hourly</button>
+            </div>
+          </div>
           <div class="forecast-cards" id="forecast-cards" role="list">
             <div
               class="forecast-card skeleton-card"
@@ -246,13 +380,23 @@
 
       <!-- ── Right Stats Rail ────────────────────────────────────────────── -->
       <aside class="stats-rail">
-        <!-- 2×3 stat tiles -->
+        <!-- Uniform 2-up grid, grouped by what they describe -->
         <div class="stats-grid" aria-label="Weather statistics">
           <div class="stat-tile">
             <span class="stat-tile-label">Humidity</span>
             <span class="stat-tile-value humidity-value skeleton-text" aria-label="Humidity"
               >--%</span
             >
+          </div>
+
+          <div class="stat-tile">
+            <span class="stat-tile-label">Dew Point</span>
+            <div class="stat-tile-main">
+              <span class="stat-tile-value dewpoint-value skeleton-text" aria-label="Dew point"
+                >--°</span
+              >
+              <span class="stat-note dewpoint-note" aria-label="Dew point comfort level"></span>
+            </div>
           </div>
 
           <div class="stat-tile">
@@ -270,11 +414,10 @@
           </div>
 
           <div class="stat-tile">
-            <span class="stat-tile-label">UV Index</span>
-            <div class="stat-tile-main">
-              <span class="stat-tile-value uv-value skeleton-text" aria-label="UV index">--</span>
-              <span class="uv-level" aria-label="UV level"></span>
-            </div>
+            <span class="stat-tile-label">Cloud Cover</span>
+            <span class="stat-tile-value cloud-value skeleton-text" aria-label="Cloud cover"
+              >--%</span
+            >
           </div>
 
           <div class="stat-tile">
@@ -285,12 +428,11 @@
           </div>
 
           <div class="stat-tile">
-            <span class="stat-tile-label">Feels Like</span>
-            <span
-              class="stat-tile-value feelslike-stat-value skeleton-text"
-              aria-label="Feels like temperature"
-              >--°C</span
-            >
+            <span class="stat-tile-label">UV Index</span>
+            <div class="stat-tile-main">
+              <span class="stat-tile-value uv-value skeleton-text" aria-label="UV Index">--</span>
+              <span class="stat-note uv-level" aria-label="UV risk level"></span>
+            </div>
           </div>
 
           <div class="stat-tile">
@@ -301,23 +443,15 @@
           </div>
 
           <div class="stat-tile">
-            <span class="stat-tile-label">Cloud Cover</span>
-            <span class="stat-tile-value cloud-value skeleton-text" aria-label="Cloud cover"
+            <span class="stat-tile-label">Chance of Rain</span>
+            <span
+              class="stat-tile-value rain-chance-value skeleton-text"
+              aria-label="Chance of rain today"
               >--%</span
             >
           </div>
 
-          <div class="stat-tile stat-tile--wide">
-            <span class="stat-tile-label">Dew Point</span>
-            <div class="stat-tile-main">
-              <span class="stat-tile-value dewpoint-value skeleton-text" aria-label="Dew point"
-                >--°C</span
-              >
-              <span class="dewpoint-note" aria-label="Dew point comfort level"></span>
-            </div>
-          </div>
-
-          <div class="stat-tile stat-tile--wide">
+          <div class="stat-tile">
             <span class="stat-tile-label">Moon Phase</span>
             <div class="stat-tile-main">
               <span class="moon-emoji" aria-hidden="true"></span>

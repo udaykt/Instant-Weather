@@ -4,7 +4,7 @@ export const handler = async (event) => {
   if (!city) return { statusCode: 400, body: JSON.stringify({ error: 'city is required' }) };
 
   const key = process.env.WEATHER_API_KEY;
-  const url = `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${encodeURIComponent(city)}&days=5&aqi=yes&alerts=no`;
+  const url = `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${encodeURIComponent(city)}&days=5&aqi=yes&alerts=yes`;
 
   try {
     const res  = await fetch(url);

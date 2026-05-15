@@ -65,7 +65,7 @@ app.get('/api/weather', async (req, res) => {
     return res.status(400).json({ error: 'city is required' });
   try {
     const forecastCacheKey = `weather:city:${city.toLowerCase().trim()}`;
-    const url = `${BASE}/forecast.json?key=${KEY}&q=${encodeURIComponent(city)}&days=5&aqi=yes&alerts=no`;
+    const url = `${BASE}/forecast.json?key=${KEY}&q=${encodeURIComponent(city)}&days=5&aqi=yes&alerts=yes`;
     await fetchWeatherApi(url, forecastCacheKey, res);
   } catch (err) {
     log('error', '/api/weather', err.message);
@@ -78,7 +78,7 @@ app.get('/api/weather-coords', async (req, res) => {
   if (!lat || !lon) return res.status(400).json({ error: 'lat and lon are required' });
   try {
     const forecastCacheKey = `weather:coords:${parseFloat(lat).toFixed(2)},${parseFloat(lon).toFixed(2)}`;
-    const url = `${BASE}/forecast.json?key=${KEY}&q=${lat},${lon}&days=5&aqi=yes&alerts=no`;
+    const url = `${BASE}/forecast.json?key=${KEY}&q=${lat},${lon}&days=5&aqi=yes&alerts=yes`;
     await fetchWeatherApi(url, forecastCacheKey, res);
   } catch (err) {
     log('error', '/api/weather-coords', err.message);
