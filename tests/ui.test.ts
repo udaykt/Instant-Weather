@@ -39,7 +39,14 @@ const mockWeather: WeatherResponse = {
     feelslike_f: 60.8,
     humidity: 70,
     wind_kph: 15,
+    wind_dir: 'W',
+    wind_degree: 270,
     pressure_mb: 1012,
+    precip_mm: 0.2,
+    cloud: 40,
+    dewpoint_c: 12,
+    uv: 4,
+    vis_km: 10,
     condition: {
       text: 'Partly cloudy',
       icon: '//cdn.weatherapi.com/weather/64x64/day/116.png',
@@ -54,11 +61,22 @@ const mockWeather: WeatherResponse = {
         day: {
           maxtemp_c: 20,
           mintemp_c: 12,
+          avgtemp_c: 16,
+          daily_chance_of_rain: 10,
+          daily_chance_of_snow: 0,
+          totalprecip_mm: 0.5,
+          maxwind_kph: 20,
           condition: {
             text: 'Sunny',
             icon: '//cdn.weatherapi.com/weather/64x64/day/113.png',
             code: 1000,
           },
+          uv: 5,
+        },
+        astro: {
+          sunrise: '06:02 AM',
+          sunset: '07:54 PM',
+          moon_phase: 'Waxing Gibbous',
         },
       },
     ],
@@ -111,7 +129,7 @@ describe('renderForecast', () => {
     };
     renderForecast(mockWeather, currentConditions);
     expect(document.querySelector('.humidity-value')?.textContent).toBe('70%');
-    expect(document.querySelector('.wind-value')?.textContent).toBe('15 kph');
+    expect(document.querySelector('.wind-value')?.textContent).toBe('15 kph W');
     expect(document.querySelector('.pressure-value')?.textContent).toBe('1012 mb');
   });
 

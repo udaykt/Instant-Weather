@@ -23,7 +23,14 @@ const CurrentWeatherSchema = z.object({
   feelslike_f: z.number(),
   humidity: z.number(),
   wind_kph: z.number(),
+  wind_dir: z.string(),
+  wind_degree: z.number(),
   pressure_mb: z.number(),
+  precip_mm: z.number(),
+  cloud: z.number(),
+  dewpoint_c: z.number(),
+  uv: z.number(),
+  vis_km: z.number(),
   condition: WeatherConditionSchema,
   air_quality: AirQualitySchema.optional(),
 });
@@ -33,7 +40,18 @@ const ForecastDaySchema = z.object({
   day: z.object({
     maxtemp_c: z.number(),
     mintemp_c: z.number(),
+    avgtemp_c: z.number(),
+    daily_chance_of_rain: z.number(),
+    daily_chance_of_snow: z.number(),
+    totalprecip_mm: z.number(),
+    maxwind_kph: z.number(),
     condition: WeatherConditionSchema,
+    uv: z.number(),
+  }),
+  astro: z.object({
+    sunrise: z.string(),
+    sunset: z.string(),
+    moon_phase: z.string(),
   }),
 });
 
