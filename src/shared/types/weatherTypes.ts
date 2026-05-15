@@ -23,7 +23,14 @@ export interface CurrentWeather {
   feelslike_f: number;
   humidity: number;
   wind_kph: number;
+  wind_dir: string;
+  wind_degree: number;
   pressure_mb: number;
+  precip_mm: number;
+  cloud: number;
+  dewpoint_c: number;
+  uv: number;
+  vis_km: number;
   condition: WeatherCondition;
   air_quality?: AirQuality;
 }
@@ -33,7 +40,18 @@ export interface ForecastDay {
   day: {
     maxtemp_c: number;
     mintemp_c: number;
+    avgtemp_c: number;
+    daily_chance_of_rain: number;
+    daily_chance_of_snow: number;
+    totalprecip_mm: number;
+    maxwind_kph: number;
     condition: WeatherCondition;
+    uv: number;
+  };
+  astro: {
+    sunrise: string;
+    sunset: string;
+    moon_phase: string;
   };
 }
 
