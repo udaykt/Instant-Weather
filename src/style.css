@@ -219,9 +219,9 @@ body::before {
     position: sticky;
     bottom: 0;
     display: block;
-    height: 36px;
-    margin-top: -36px;
-    background: linear-gradient(to top, hsla(var(--cond-hue), 30%, 10%, 0.65) 0%, transparent 100%);
+    height: 32px;
+    margin-top: -32px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.14) 0%, transparent 100%);
     pointer-events: none;
     border-radius: 0 0 24px 24px;
     flex-shrink: 0;
@@ -394,11 +394,11 @@ body::before {
 }
 
 .section-label {
-  font-size: 10px;
+  font-size: 11px;
   font-family: Gilroy-Bold, sans-serif;
   text-transform: uppercase;
   letter-spacing: 1.4px;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.55);
   margin-bottom: 2px;
 }
 
@@ -595,11 +595,11 @@ body::before {
 }
 
 .weather-icon {
-  width: 64px;
-  height: 64px;
+  width: 84px;
+  height: 84px;
   object-fit: contain;
-  padding-bottom: 14px;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  padding-bottom: 16px;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.35));
 }
 
 /* ── Feels like + description + AQI ────────────────────────────────────── */
@@ -623,6 +623,89 @@ body::before {
   margin-top: 4px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
   min-height: 38px;
+}
+
+/* ── Today highlights strip (center panel) ──────────────────────────────── */
+.today-highlights {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.today-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    background 0.35s ease,
+    transform 0.2s ease;
+}
+.today-pill:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-3px);
+}
+
+.today-pill-icon {
+  font-size: 22px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.today-pill-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.today-pill-val {
+  font-family: Gilroy-Heavy, sans-serif;
+  font-size: 15px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.today-pill-label {
+  font-family: Gilroy-Medium, sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .today-highlights {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .today-highlights {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .today-pill {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .today-pill-icon {
+    font-size: 18px;
+  }
+  .today-pill-val {
+    font-size: 13px;
+  }
 }
 
 /* AQI badge */
@@ -689,9 +772,9 @@ body::before {
     position: sticky;
     bottom: 0;
     display: block;
-    height: 48px;
-    margin-top: -48px;
-    background: linear-gradient(to top, hsla(var(--cond-hue), 30%, 10%, 0.7) 0%, transparent 100%);
+    height: 40px;
+    margin-top: -40px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.14) 0%, transparent 100%);
     pointer-events: none;
     border-radius: 0 0 24px 24px;
     flex-shrink: 0;
@@ -734,19 +817,28 @@ body::before {
 }
 
 .stat-tile-label {
-  font-size: 11px;
+  font-size: 12px;
   font-family: Gilroy-Bold, sans-serif;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.9px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .stat-tile-value {
   font-family: Gilroy-Heavy, sans-serif;
-  font-size: 28px;
+  font-size: 26px;
   color: #fff;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
-  min-height: 36px;
+  min-height: 34px;
+  line-height: 1.1;
+  word-break: break-word;
+}
+
+/* Sunrise / sunset time values are long — use a slightly smaller size */
+.sunrise-value,
+.sunset-value {
+  font-size: 20px;
+  letter-spacing: -0.3px;
 }
 
 .stat-tile-main {

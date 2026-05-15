@@ -170,6 +170,22 @@ export function renderForecast(
     if (moonEmoji) moonEmoji.textContent = moonPhaseEmoji(astro.moon_phase);
   }
 
+  // ── Center today highlights ───────────────────────────────────────────────
+  const centerWind = qsMaybe<HTMLElement>('.center-wind-val');
+  if (centerWind) centerWind.textContent = `${current.wind_kph} kph ${current.wind_dir}`;
+
+  const centerHumidity = qsMaybe<HTMLElement>('.center-humidity-val');
+  if (centerHumidity) centerHumidity.textContent = `${current.humidity}%`;
+
+  if (forecast?.forecastday?.[0]) {
+    const todayDay = forecast.forecastday[0].day;
+    const hlEl = qsMaybe<HTMLElement>('.today-hl-val');
+    if (hlEl)
+      hlEl.textContent = `${Math.round(todayDay.maxtemp_c)}° / ${Math.round(todayDay.mintemp_c)}°`;
+    const rainEl = qsMaybe<HTMLElement>('.today-rain-val');
+    if (rainEl) rainEl.textContent = `${todayDay.daily_chance_of_rain}%`;
+  }
+
   // ── AQI ───────────────────────────────────────────────────────────────────
   if (current.air_quality) renderAQI(current.air_quality);
 
