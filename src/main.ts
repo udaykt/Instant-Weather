@@ -9,9 +9,9 @@ import type { TempState, WeatherResponse } from './types';
 const tempState: TempState = { temp_c: 0, temp_f: 0, hi_low_c: 0, hi_low_f: 0 };
 
 // DOM references
-const searchBox  = document.getElementById('search-box')        as HTMLInputElement;
-const searchBtn  = document.querySelector<HTMLButtonElement>('.search-button')!;
-const suggestEl  = document.getElementById('search-suggestions') as HTMLUListElement;
+const searchBox = document.getElementById('search-box') as HTMLInputElement;
+const searchBtn = document.querySelector<HTMLButtonElement>('.search-button')!;
+const suggestEl = document.getElementById('search-suggestions') as HTMLUListElement;
 const tempToggle = document.querySelector<HTMLButtonElement>('.temperature-degree')!;
 
 // ─── PWA ─────────────────────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ async function fetchAndDisplay(promise: Promise<WeatherResponse>): Promise<void>
 function showErrorToast(msg: string): void {
   document.querySelector('.error-toast')?.remove();
   const toast = document.createElement('div');
-  toast.className  = 'error-toast';
+  toast.className = 'error-toast';
   toast.textContent = msg;
   toast.setAttribute('role', 'alert');
   document.body.appendChild(toast);
@@ -53,8 +53,12 @@ function triggerSearch(): void {
 searchBtn.addEventListener('click', triggerSearch);
 
 searchBox.addEventListener('keydown', (e: KeyboardEvent) => {
-  if (e.key === 'Enter')     { triggerSearch(); }
-  if (e.key === 'Escape')    { hideSuggestions(); }
+  if (e.key === 'Enter') {
+    triggerSearch();
+  }
+  if (e.key === 'Escape') {
+    hideSuggestions();
+  }
   if (e.key === 'ArrowDown') {
     (suggestEl.querySelector('.search-suggestion-item') as HTMLElement | null)?.focus();
     e.preventDefault();
@@ -73,26 +77,41 @@ function hideSuggestions(): void {
 }
 
 function renderSuggestions(cities: Awaited<ReturnType<typeof searchCities>>): void {
-  if (!cities.length) { hideSuggestions(); return; }
+  if (!cities.length) {
+    hideSuggestions();
+    return;
+  }
 
-  suggestEl.innerHTML = cities.slice(0, 5).map((c, i) =>
-    `<li class="search-suggestion-item" role="option" tabindex="0" data-index="${i}">
+  suggestEl.innerHTML = cities
+    .slice(0, 5)
+    .map(
+      (c, i) =>
+        `<li class="search-suggestion-item" role="option" tabindex="0" data-index="${i}">
        ${c.name}${c.region ? `, ${c.region}` : ''}, ${c.country}
      </li>`,
-  ).join('');
+    )
+    .join('');
   suggestEl.classList.add('active');
 
   suggestEl.querySelectorAll<HTMLLIElement>('.search-suggestion-item').forEach((item, i) => {
     item.addEventListener('click', () => selectSuggestion(cities[i].name));
     item.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Enter')     { selectSuggestion(cities[i].name); }
-      if (e.key === 'ArrowDown') { (item.nextElementSibling as HTMLElement | null)?.focus(); e.preventDefault(); }
-      if (e.key === 'ArrowUp')   {
-        const prev = item.previousElementSibling as HTMLElement | null;
-        prev ? prev.focus() : searchBox.focus();
+      if (e.key === 'Enter') {
+        selectSuggestion(cities[i].name);
+      }
+      if (e.key === 'ArrowDown') {
+        (item.nextElementSibling as HTMLElement | null)?.focus();
         e.preventDefault();
       }
-      if (e.key === 'Escape')    { hideSuggestions(); searchBox.focus(); }
+      if (e.key === 'ArrowUp') {
+        const prev = item.previousElementSibling as HTMLElement | null;
+        (prev ?? searchBox).focus();
+        e.preventDefault();
+      }
+      if (e.key === 'Escape') {
+        hideSuggestions();
+        searchBox.focus();
+      }
     });
   });
 }
@@ -104,7 +123,10 @@ function selectSuggestion(cityName: string): void {
 }
 
 const debouncedAutocomplete = debounce(async (query: string) => {
-  if (!query || query.length < 2) { hideSuggestions(); return; }
+  if (!query || query.length < 2) {
+    hideSuggestions();
+    return;
+  }
   const cities = await searchCities(query);
   renderSuggestions(cities);
 }, 300);
