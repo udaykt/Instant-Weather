@@ -1,0 +1,28 @@
+/* ── Aurora parallax (Feature 4) ────────────────────────────────────────── */
+:root {
+  --aurora-x: 0px;
+  --aurora-y: 0px;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: -15%;
+  width: 130%;
+  height: 130%;
+  background: radial-gradient(
+    ellipse 50% 60% at 80% 20%,
+    hsla(calc(var(--cond-hue) + 60), 65%, 55%, 0.22) 0%,
+    transparent 68%
+  );
+  animation: auroraShift 80s ease-in-out infinite alternate-reverse;
+  z-index: -1;
+  pointer-events: none;
+  transition: background 1.4s ease;
+  will-change: transform;
+  transform: translate(calc(var(--aurora-x) * -0.025), calc(var(--aurora-y) * -0.02));
+}
+
+body::before {
+  transform: translate(calc(var(--aurora-x) * 0.04), calc(var(--aurora-y) * 0.03));
+}

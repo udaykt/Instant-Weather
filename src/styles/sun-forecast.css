@@ -1,0 +1,194 @@
+/* ── Sunrise / Sunset row (center panel) ───────────────────────────────── */
+.sun-times {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  border-radius: var(--r-tile);
+  width: 100%;
+  max-width: 520px;
+  transition:
+    background 0.9s ease,
+    border-color 0.9s ease;
+}
+
+.sun-time-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+
+.sun-time-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  color: #ffc24d;
+  filter: drop-shadow(0 0 7px rgba(255, 180, 60, 0.55));
+}
+
+.sun-time-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sun-time-label {
+  font-size: 11px;
+  font-family: Gilroy-Bold, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-dim);
+}
+
+.sun-time-value {
+  font-family: Gilroy-Heavy, sans-serif;
+  font-size: 22px;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  min-height: 28px;
+}
+
+.sun-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+
+/* ── Forecast section (center panel) ───────────────────────────────────── */
+.forecast-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Always 5-column horizontal grid */
+.forecast-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.forecast-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 14px 8px 12px;
+  border-radius: var(--r-tile);
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  color: #fff;
+  min-height: 130px;
+  gap: 5px;
+  position: relative;
+  overflow: hidden;
+  transition:
+    background 0.9s ease,
+    border-color 0.9s ease,
+    transform 0.2s ease;
+}
+.forecast-card:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-4px);
+}
+
+.forecast-day {
+  font-size: 13px;
+  font-family: Gilroy-Bold, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.forecast-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.forecast-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+}
+
+.forecast-desc {
+  font-size: 11px;
+  font-family: Gilroy-Medium, sans-serif;
+  color: rgba(255, 255, 255, 0.74);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.forecast-rain {
+  font-size: 11px;
+  font-family: Gilroy-Medium, sans-serif;
+  color: rgba(140, 195, 255, 0.9);
+}
+
+.forecast-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  margin-top: auto;
+}
+
+.forecast-temps {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.forecast-high {
+  font-family: Gilroy-Heavy, sans-serif;
+  font-size: 16px;
+  color: #fff;
+}
+.forecast-low {
+  font-family: Gilroy-Medium, sans-serif;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+
+.forecast-wind {
+  font-size: 10px;
+  font-family: Gilroy-Medium, sans-serif;
+  color: rgba(255, 255, 255, 0.38);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  /* Scroll horizontally instead of hiding days — all data stays reachable */
+  .forecast-cards,
+  .forecast-cards.hourly-mode {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .forecast-cards::-webkit-scrollbar {
+    display: none;
+  }
+  .forecast-card {
+    flex: 0 0 auto;
+    min-width: 96px;
+    scroll-snap-align: start;
+  }
+}

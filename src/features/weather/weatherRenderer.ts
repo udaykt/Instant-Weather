@@ -1,145 +1,36 @@
-// weatherRenderer.ts — typed DOM/UI updates
+// weatherRenderer.ts — orchestrator. Pulls the typed WeatherAPI response apart
+// and hands each slice to a focused render module. All public render API is
+// re-exported here so callers keep one stable import path.
 
-import type {
-  WeatherResponse,
-  TemperatureState,
-  AirQuality,
-  ForecastDay,
-} from '@/shared/types/weatherTypes';
+import type { WeatherResponse, TemperatureState } from '@/shared/types/weatherTypes';
 import { formatForecastDate, getDaytimePhase } from '@/shared/utils/weatherUtils';
+import { getBestOutdoorWindow } from '@/features/weather/bestTimeAdvisor';
+import { flagUrl } from '@/shared/utils/countryFlags';
 
-const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const AQI_LABELS = [
-  '',
-  'Good',
-  'Moderate',
-  'Unhealthy (Sensitive)',
-  'Unhealthy',
-  'Very Unhealthy',
-  'Hazardous',
-];
-const AQI_COLORS = ['', '#00c853', '#ffd600', '#ff6d00', '#d50000', '#6a1b9a', '#37474f'];
-const AQI_TEXT = ['', '#000', '#000', '#fff', '#fff', '#fff', '#fff'];
+import { qs, qsMaybe } from './render/dom';
+import { conditionToHue } from './render/aurora';
+import { setWeatherIcon } from './render/weatherIcon';
+import { applyTempUnit, getSavedUnit, cToF, setUnitSnapshot } from './render/unitSystem';
+import { renderSunArc } from './render/sunArc';
+import { renderSparkline } from './render/sparkline';
+import { renderForecastCards } from './render/forecastCards';
+import { renderAQI } from './render/airQuality';
+import { renderAlerts } from './render/alerts';
+import { moonPhaseEmoji } from './render/moonPhase';
 
-// Typed querySelector — throws if element is missing so callers never need null-checks
-function qs<T extends HTMLElement>(selector: string): T {
-  const el = document.querySelector<T>(selector);
-  if (!el) throw new Error(`Element not found: "${selector}"`);
-  return el;
-}
+// Re-exported public surface (main.ts, tests, resize handlers).
+export { applyTempUnit, getSavedUnit, formatTemperature } from './render/unitSystem';
+export { renderForecastCards, renderHourlyForecast } from './render/forecastCards';
+export { renderSparkline } from './render/sparkline';
 
-export function renderForecast(
-  weatherData: WeatherResponse,
-  currentConditions: TemperatureState,
-): void {
-  if (!weatherData?.current) return;
-  const { location, current, forecast } = weatherData;
+let lastWeatherData: WeatherResponse | null = null;
 
-  // Location
-  qs<HTMLSpanElement>('.city').textContent = location.name;
-  qs<HTMLSpanElement>('.country').textContent = location.country;
-
-  // Condition text + icon
-  const { condition } = current;
-  qs<HTMLDivElement>('.weather-description').textContent = condition.text;
-  const conditionIcon = document.getElementById('icon') as HTMLImageElement;
-  conditionIcon.src = `https:${condition.icon}`;
-  conditionIcon.alt = condition.text;
-
-  // Time-of-day gradient
-  const [, timePart] = location.localtime.split(' ');
-  const hour = Number(timePart.split(':')[0]);
-  const daytimePhase = getDaytimePhase(hour);
-  const mainBlock = document.getElementById('main-block') as HTMLElement;
-  mainBlock.style.backgroundImage = daytimePhase.gradient;
-  qs<HTMLDivElement>('.part-of-day').textContent = daytimePhase.name;
-
-  // Input theme — light or dark text based on background brightness
-  applyInputTheme(daytimePhase.isLight);
-
-  // Date + time
-  const jsDate = new Date(location.localtime.replace(/-/g, '/'));
-  qs<HTMLSpanElement>('.date').textContent = `${formatForecastDate(jsDate)},`;
-  qs<HTMLSpanElement>('.time').textContent = ` ${timePart}`;
-
-  // Temperatures
-  const temp_c = Math.round(current.temp_c);
-  const temp_f = Math.round(current.temp_f);
-  const feelslike_c = Math.round(current.feelslike_c);
-  const feelslike_f = Math.round(current.feelslike_f);
-
-  qs<HTMLDivElement>('.temperature-reading').textContent = `${temp_c}°`;
-  qs<HTMLDivElement>('.temperature-real-feel').textContent = `Feels like ${feelslike_c}°C`;
-  Object.assign(currentConditions, { temp_c, temp_f, feelslike_c, feelslike_f });
-
-  // Always reset unit toggle to C on new city data
-  const toggleBtn = qs<HTMLButtonElement>('.temperature-degree');
-  toggleBtn.value = 'C';
-  toggleBtn.textContent = 'C';
-
-  // Stats
-  qs<HTMLDivElement>('.humidity-value').textContent = `${current.humidity}%`;
-  qs<HTMLDivElement>('.wind-value').textContent = `${current.wind_kph} kph`;
-  qs<HTMLDivElement>('.pressure-value').textContent = `${current.pressure_mb} mb`;
-
-  if (current.air_quality) renderAQI(current.air_quality);
-  if (forecast?.forecastday) renderForecastCards(forecast.forecastday);
-
-  removeSkeleton();
-  mainBlock.setAttribute('aria-busy', 'false');
-}
-
-function renderAQI(aqi: AirQuality): void {
-  const badge = document.getElementById('aqi-badge') as HTMLDivElement | null;
-  if (!badge) return;
-  const idx = aqi['us-epa-index'];
-  if (!idx || idx < 1 || idx > 6) {
-    badge.textContent = '';
-    return;
-  }
-  badge.textContent = `AQI · ${AQI_LABELS[idx]}`;
-  badge.style.backgroundColor = AQI_COLORS[idx];
-  badge.style.color = AQI_TEXT[idx];
-}
-
-function renderForecastCards(days: ForecastDay[]): void {
-  const container = document.getElementById('forecast-cards');
-  if (!container) return;
-  container.innerHTML = days
-    .map((day, i) => {
-      const date = new Date(`${day.date}T00:00:00`);
-      const label = i === 0 ? 'Today' : SHORT_DAYS[date.getDay()];
-      const conditionIcon = `https:${day.day.condition.icon}`;
-      const high = Math.round(day.day.maxtemp_c);
-      const low = Math.round(day.day.mintemp_c);
-      const desc = day.day.condition.text;
-      return `
-      <div class="forecast-card" role="listitem" aria-label="${label}: ${desc}, High ${high}° Low ${low}°">
-        <div class="forecast-day">${label}</div>
-        <img class="forecast-icon" src="${conditionIcon}" alt="${desc}" loading="lazy" />
-        <div class="forecast-temps">
-          <span class="forecast-high">${high}°</span>
-          <span class="forecast-low">${low}°</span>
-        </div>
-        <div class="forecast-desc">${desc}</div>
-      </div>`;
-    })
-    .join('');
-}
-
-function applyInputTheme(isLight: boolean): void {
-  const color = isLight ? '#222' : '#efefef';
-  let styleEl = document.getElementById('dynamic-input-theme') as HTMLStyleElement | null;
-  if (!styleEl) {
-    styleEl = document.createElement('style');
-    styleEl.id = 'dynamic-input-theme';
-    document.head.appendChild(styleEl);
-  }
-  styleEl.textContent = `
-    .search-box::placeholder { color: ${color} !important; }
-    .search-box              { color: ${color} !important; }
-    .search-button           { color: ${color} !important; }
-  `;
+function uvLabel(uv: number): { text: string; level: string } {
+  if (uv <= 2) return { text: 'Low', level: 'low' };
+  if (uv <= 5) return { text: 'Moderate', level: 'moderate' };
+  if (uv <= 7) return { text: 'High', level: 'high' };
+  if (uv <= 10) return { text: 'Very High', level: 'very-high' };
+  return { text: 'Extreme', level: 'extreme' };
 }
 
 function removeSkeleton(): void {
@@ -147,19 +38,146 @@ function removeSkeleton(): void {
   document.querySelectorAll('.skeleton-card').forEach((el) => el.classList.remove('skeleton-card'));
 }
 
-export function formatTemperature(unit: string, currentConditions: TemperatureState): void {
-  const toggle = qs<HTMLButtonElement>('.temperature-degree');
-  const tempEl = qs<HTMLDivElement>('.temperature-reading');
-  const feelEl = qs<HTMLDivElement>('.temperature-real-feel');
-  if (unit === 'C') {
-    toggle.value = 'F';
-    toggle.textContent = 'F';
-    tempEl.textContent = `${currentConditions.temp_f}°`;
-    feelEl.textContent = `Feels like ${currentConditions.feelslike_f}°F`;
-  } else {
-    toggle.value = 'C';
-    toggle.textContent = 'C';
-    tempEl.textContent = `${currentConditions.temp_c}°`;
-    feelEl.textContent = `Feels like ${currentConditions.feelslike_c}°C`;
+export function renderForecast(
+  weatherData: WeatherResponse,
+  currentConditions: TemperatureState,
+): void {
+  if (!weatherData?.current) return;
+  lastWeatherData = weatherData;
+  const { location, current, forecast } = weatherData;
+
+  // Aurora theme + daytime phase
+  document.documentElement.style.setProperty(
+    '--cond-hue',
+    String(conditionToHue(current.condition.code)),
+  );
+  const [, timePart] = location.localtime.split(' ');
+  const hour = Number(timePart.split(':')[0]);
+  const daytimePhase = getDaytimePhase(hour);
+  document.body.style.backgroundImage = daytimePhase.gradient;
+  document.body.classList.toggle('light-bg', daytimePhase.isLight);
+
+  // Location + flag
+  qs<HTMLSpanElement>('.city').textContent = location.name;
+  qs<HTMLSpanElement>('.country').textContent = location.country;
+  const flagEl = qsMaybe<HTMLImageElement>('.country-flag');
+  if (flagEl) {
+    const url = flagUrl(location.country);
+    if (url) {
+      flagEl.src = url;
+      flagEl.alt = `${location.country} flag`;
+      flagEl.hidden = false;
+      flagEl.onerror = () => {
+        flagEl.hidden = true;
+      };
+    } else {
+      flagEl.hidden = true;
+      flagEl.removeAttribute('src');
+    }
   }
+
+  // Condition text + icon
+  const { condition } = current;
+  qs<HTMLDivElement>('.weather-description').textContent = condition.text;
+  setWeatherIcon(`https:${condition.icon}`, condition.text);
+
+  // Date + time
+  qs<HTMLDivElement>('.part-of-day').textContent = daytimePhase.name;
+  const jsDate = new Date(location.localtime.replace(/-/g, '/'));
+  qs<HTMLSpanElement>('.date').textContent = formatForecastDate(jsDate);
+  qs<HTMLSpanElement>('.time').textContent = timePart;
+
+  // Temperatures — snapshot everything, render through the unit system
+  const day0 = forecast?.forecastday?.[0]?.day;
+  setUnitSnapshot({
+    tC: current.temp_c,
+    tF: current.temp_f,
+    flC: current.feelslike_c,
+    flF: current.feelslike_f,
+    hiC: day0 ? day0.maxtemp_c : current.temp_c,
+    hiF: day0 ? cToF(day0.maxtemp_c) : current.temp_f,
+    loC: day0 ? day0.mintemp_c : current.temp_c,
+    loF: day0 ? cToF(day0.mintemp_c) : current.temp_f,
+    dewC: current.dewpoint_c,
+    dewF: cToF(current.dewpoint_c),
+  });
+  Object.assign(currentConditions, {
+    temp_c: Math.round(current.temp_c),
+    temp_f: Math.round(current.temp_f),
+    feelslike_c: Math.round(current.feelslike_c),
+    feelslike_f: Math.round(current.feelslike_f),
+  });
+  applyTempUnit(getSavedUnit());
+
+  // Core stats
+  qs<HTMLElement>('.humidity-value').textContent = `${current.humidity}%`;
+  qs<HTMLElement>('.wind-value').textContent = `${Math.round(current.wind_kph)} kph`;
+  const windDirEl = qsMaybe<HTMLElement>('.wind-dir');
+  if (windDirEl) windDirEl.textContent = current.wind_dir;
+  qs<HTMLElement>('.pressure-value').textContent = `${current.pressure_mb} mb`;
+
+  const uvEl = qsMaybe<HTMLElement>('.uv-value');
+  if (uvEl) {
+    const uv = Math.round(current.uv);
+    uvEl.textContent = String(uv);
+    const uvLevelEl = qsMaybe<HTMLElement>('.uv-level');
+    if (uvLevelEl) {
+      const { text, level } = uvLabel(uv);
+      uvLevelEl.textContent = `· ${text}`;
+      uvLevelEl.dataset.level = level;
+    }
+  }
+
+  const visEl = qsMaybe<HTMLElement>('.vis-value');
+  if (visEl) visEl.textContent = `${current.vis_km} km`;
+
+  const precipEl = qsMaybe<HTMLElement>('.precip-value');
+  if (precipEl) precipEl.textContent = `${current.precip_mm} mm`;
+
+  const dewNoteEl = qsMaybe<HTMLElement>('.dewpoint-note');
+  if (dewNoteEl) {
+    const dp = current.dewpoint_c;
+    dewNoteEl.textContent =
+      dp >= 24 ? 'Very Humid' : dp >= 18 ? 'Humid' : dp >= 13 ? 'Comfortable' : 'Dry';
+  }
+
+  // Astro
+  const astro = forecast?.forecastday?.[0]?.astro;
+  if (astro) {
+    const sunriseEl = qsMaybe<HTMLElement>('.sunrise-value');
+    if (sunriseEl) sunriseEl.textContent = astro.sunrise;
+    const sunsetEl = qsMaybe<HTMLElement>('.sunset-value');
+    if (sunsetEl) sunsetEl.textContent = astro.sunset;
+    const moonEl = qsMaybe<HTMLElement>('.moon-phase-value');
+    if (moonEl) moonEl.textContent = astro.moon_phase;
+    const moonEmoji = qsMaybe<HTMLElement>('.moon-emoji');
+    if (moonEmoji) moonEmoji.textContent = moonPhaseEmoji(astro.moon_phase);
+    renderSunArc(astro.sunrise, astro.sunset, location.localtime);
+  }
+
+  const rainChanceEl = qsMaybe<HTMLElement>('.rain-chance-value');
+  if (rainChanceEl) rainChanceEl.textContent = day0 ? `${day0.daily_chance_of_rain}%` : '—';
+
+  if (current.air_quality) renderAQI(current.air_quality);
+  renderAlerts(weatherData.alerts?.alert);
+
+  const todayHours = forecast?.forecastday?.[0]?.hour ?? [];
+  if (todayHours.length > 0) renderSparkline(todayHours, hour);
+
+  const bestHint = qsMaybe<HTMLElement>('#best-time-hint');
+  if (bestHint && todayHours.length > 0) {
+    bestHint.textContent = getBestOutdoorWindow(todayHours);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.forecast-toggle-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.mode === '5day');
+  });
+  if (forecast?.forecastday) renderForecastCards(forecast.forecastday);
+
+  removeSkeleton();
+  document.getElementById('main-block')?.setAttribute('aria-busy', 'false');
+}
+
+export function getLastWeatherData(): WeatherResponse | null {
+  return lastWeatherData;
 }

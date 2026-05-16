@@ -1,0 +1,180 @@
+/* ── Registered custom properties (animatable CSS vars) ─────────────────── */
+@property --cond-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 210;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Fonts ──────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: Gilroy-Heavy;
+  src: url('/assets/fonts/Gilroy-Heavy.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: Gilroy-Bold;
+  src: url('/assets/fonts/Gilroy-Bold.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: Gilroy-Medium;
+  src: url('/assets/fonts/Gilroy-Medium.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* ── Base & aurora background ───────────────────────────────────────────── */
+:root {
+  --cond-hue: 210;
+  --glass-bg: hsla(var(--cond-hue), 42%, 62%, 0.11);
+  --glass-border: hsla(var(--cond-hue), 60%, 88%, 0.2);
+  --glass-shadow: hsla(var(--cond-hue), 60%, 20%, 0.28);
+  --glass-inset: rgba(255, 255, 255, 0.2);
+  --tile-bg: hsla(var(--cond-hue), 32%, 55%, 0.13);
+  --tile-border: hsla(var(--cond-hue), 50%, 82%, 0.2);
+  /* Single, theme-tied accent for every secondary "subline" — keeps the
+     dynamic-hue look while giving low-contrast text a consistent edge. */
+  --accent: hsl(var(--cond-hue) 95% 82%);
+  --accent-dim: hsl(var(--cond-hue) 80% 80% / 0.7);
+
+  /* ── Spacing scale (single rhythm everywhere) ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+
+  /* ── Radius scale (3 tiers: card · tile · pill) ── */
+  --r-card: 24px;
+  --r-tile: 16px;
+  --r-pill: 999px;
+
+  transition: --cond-hue 1.4s ease;
+}
+
+/* Light daytime phases (dawn, morning, late morning, late afternoon) */
+body.light-bg {
+  --glass-bg: rgba(6, 10, 24, 0.54);
+  --glass-border: rgba(255, 255, 255, 0.24);
+  --glass-shadow: rgba(0, 0, 0, 0.38);
+  --tile-bg: rgba(6, 10, 24, 0.42);
+  --tile-border: rgba(255, 255, 255, 0.2);
+  --accent: hsl(var(--cond-hue) 90% 85%);
+  --accent-dim: hsl(var(--cond-hue) 80% 84% / 0.78);
+}
+
+body {
+  font-family: Gilroy-Bold, system-ui, sans-serif;
+  min-height: 100vh;
+  background-color: hsl(220, 50%, 10%);
+  background-image: linear-gradient(to bottom, #141e30, #243b55);
+  background-attachment: fixed;
+  transition:
+    background-image 0.9s ease,
+    background-color 0.9s ease;
+  overflow-x: hidden;
+}
+
+/* Aurora mesh — two slow-drifting radial blobs tinted by condition hue */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -15%;
+  width: 130%;
+  height: 130%;
+  background:
+    radial-gradient(
+      ellipse 55% 50% at 22% 30%,
+      hsla(var(--cond-hue), 75%, 62%, 0.38) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse 45% 55% at 78% 68%,
+      hsla(calc(var(--cond-hue) + 38), 65%, 48%, 0.28) 0%,
+      transparent 68%
+    );
+  animation: auroraShift 60s ease-in-out infinite alternate;
+  z-index: -1;
+  pointer-events: none;
+  transition: background 1.4s ease;
+  will-change: transform;
+}
+
+@keyframes auroraShift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(2.5%, -1.5%) scale(1.04);
+  }
+  66% {
+    transform: translate(-1.5%, 2%) scale(0.97);
+  }
+  100% {
+    transform: translate(1%, 1.5%) scale(1.02);
+  }
+}
+
+/* ── Glass card base ────────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-card);
+  box-shadow:
+    0 8px 40px var(--glass-shadow),
+    inset 0 1px 0 var(--glass-inset);
+  transition:
+    background 0.9s ease,
+    border-color 0.9s ease,
+    box-shadow 0.9s ease;
+}
+
+/* ── Skeleton shimmer ───────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.skeleton-text {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.07) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.07) 75%
+  );
+  background-size: 1200px 100%;
+  animation: shimmer 1.6s infinite linear;
+  border-radius: 6px;
+  color: transparent !important;
+  display: inline-block;
+  min-width: 60px;
+  min-height: 1em;
+  user-select: none;
+}
+
+.skeleton-card {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 1200px 100%;
+  animation: shimmer 1.6s infinite linear;
+  border-radius: var(--r-tile);
+}

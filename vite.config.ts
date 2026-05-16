@@ -31,7 +31,7 @@ function devApiPlugin(apiKey: string): Plugin {
               res.end(JSON.stringify({ error: 'city required' }));
               return;
             }
-            upstreamUrl = `${WEATHER_BASE}/forecast.json?key=${apiKey}&q=${encodeURIComponent(city)}&days=5&aqi=yes&alerts=no`;
+            upstreamUrl = `${WEATHER_BASE}/forecast.json?key=${apiKey}&q=${encodeURIComponent(city)}&days=5&aqi=yes&alerts=yes`;
           } else if (pathname === '/api/weather-coords') {
             const lat = searchParams.get('lat');
             const lon = searchParams.get('lon');
@@ -40,7 +40,7 @@ function devApiPlugin(apiKey: string): Plugin {
               res.end(JSON.stringify({ error: 'lat and lon required' }));
               return;
             }
-            upstreamUrl = `${WEATHER_BASE}/forecast.json?key=${apiKey}&q=${lat},${lon}&days=5&aqi=yes&alerts=no`;
+            upstreamUrl = `${WEATHER_BASE}/forecast.json?key=${apiKey}&q=${lat},${lon}&days=5&aqi=yes&alerts=yes`;
           } else if (pathname === '/api/search') {
             const q = searchParams.get('q');
             if (!q) {
@@ -115,8 +115,15 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: 'node',
       globals: true,
+      pool: 'forks',
       exclude: ['node_modules/**', 'tests/e2e/**'],
       environmentMatchGlobs: [['tests/ui.test.ts', 'happy-dom']],
+      alias: [
+        {
+          find: 'html2canvas',
+          replacement: new URL('./src/__mocks__/html2canvas.ts', import.meta.url).pathname,
+        },
+      ],
     },
   };
 });

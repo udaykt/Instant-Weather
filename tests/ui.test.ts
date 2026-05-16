@@ -39,7 +39,14 @@ const mockWeather: WeatherResponse = {
     feelslike_f: 60.8,
     humidity: 70,
     wind_kph: 15,
+    wind_dir: 'W',
+    wind_degree: 270,
     pressure_mb: 1012,
+    precip_mm: 0.2,
+    cloud: 40,
+    dewpoint_c: 12,
+    uv: 4,
+    vis_km: 10,
     condition: {
       text: 'Partly cloudy',
       icon: '//cdn.weatherapi.com/weather/64x64/day/116.png',
@@ -54,11 +61,22 @@ const mockWeather: WeatherResponse = {
         day: {
           maxtemp_c: 20,
           mintemp_c: 12,
+          avgtemp_c: 16,
+          daily_chance_of_rain: 10,
+          daily_chance_of_snow: 0,
+          totalprecip_mm: 0.5,
+          maxwind_kph: 20,
           condition: {
             text: 'Sunny',
             icon: '//cdn.weatherapi.com/weather/64x64/day/113.png',
             code: 1000,
           },
+          uv: 5,
+        },
+        astro: {
+          sunrise: '06:02 AM',
+          sunset: '07:54 PM',
+          moon_phase: 'Waxing Gibbous',
         },
       },
     ],
@@ -169,31 +187,16 @@ describe('renderForecast', () => {
 });
 
 describe('formatTemperature', () => {
-  beforeEach(setupDOM);
-
-  it('switches from C to F', () => {
-    const currentConditions: TemperatureState = {
-      temp_c: 18,
-      temp_f: 64,
-      feelslike_c: 16,
-      feelslike_f: 61,
-    };
-    formatTemperature('C', currentConditions);
-    expect(document.querySelector('.temperature-reading')?.textContent).toBe('64°');
-    expect(document.querySelector('.temperature-degree')?.textContent).toBe('F');
-    expect(document.querySelector('.temperature-real-feel')?.textContent).toBe('Feels like 61°F');
+  it('formats the Celsius reading', () => {
+    expect(formatTemperature(18, 64, 'C')).toBe('18°');
   });
 
-  it('switches from F back to C', () => {
-    const currentConditions: TemperatureState = {
-      temp_c: 18,
-      temp_f: 64,
-      feelslike_c: 16,
-      feelslike_f: 61,
-    };
-    formatTemperature('F', currentConditions);
-    expect(document.querySelector('.temperature-reading')?.textContent).toBe('18°');
-    expect(document.querySelector('.temperature-degree')?.textContent).toBe('C');
-    expect(document.querySelector('.temperature-real-feel')?.textContent).toBe('Feels like 16°C');
+  it('formats the Fahrenheit reading', () => {
+    expect(formatTemperature(18, 64, 'F')).toBe('64°');
+  });
+
+  it('rounds to the nearest whole degree', () => {
+    expect(formatTemperature(18.4, 63.6, 'C')).toBe('18°');
+    expect(formatTemperature(18.4, 63.6, 'F')).toBe('64°');
   });
 });
