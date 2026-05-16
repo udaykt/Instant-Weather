@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Real-time weather forecasts for any city worldwide." />
     <meta name="theme-color" content="#141e30" />
     <link rel="stylesheet" href="/src/style.css" />
@@ -15,6 +15,17 @@
     <div class="weather-app">
       <!-- ── Left Sidebar ──────────────────────────────────────────────────── -->
       <aside class="sidebar">
+        <!-- Brand lockup (top) -->
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-lockup">
+            <img src="/assets/images/sun.png" class="sidebar-logo" width="34" height="34" alt="" />
+            <div class="sidebar-brand-text">
+              <span class="sidebar-brand-name">Instant Weather</span>
+              <span class="sidebar-brand-tagline">Real-time · Everywhere</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Search -->
         <div class="search" role="search">
           <div class="search-wrapper">
@@ -97,16 +108,6 @@
             <div class="qc-skeleton skeleton-card" aria-hidden="true"></div>
           </div>
         </div>
-
-        <div class="sidebar-footer">
-          <div class="sidebar-brand-lockup">
-            <img src="/assets/images/sun.png" class="sidebar-logo" width="32" height="32" alt="" />
-            <div class="sidebar-brand-text">
-              <span class="sidebar-brand-name">Instant Weather</span>
-              <span class="sidebar-brand-tagline">Real-time · Everywhere</span>
-            </div>
-          </div>
-        </div>
       </aside>
 
       <!-- ── Main Weather Panel ───────────────────────────────────────────── -->
@@ -129,9 +130,11 @@
               />
             </svg>
             <div class="location-text">
-              <span class="city skeleton-text" aria-label="City">City Name</span
-              ><span class="sep">,&nbsp;</span
-              ><span class="country skeleton-text" aria-label="Country">Country</span>
+              <span class="city skeleton-text" aria-label="City">City Name</span>
+              <span class="country-pill" aria-label="Country">
+                <img class="country-flag" src="" alt="" width="21" height="15" hidden />
+                <span class="country">Country</span>
+              </span>
             </div>
           </div>
           <div class="header-right">
@@ -297,6 +300,15 @@
             <!-- Semicircle arc: left (10,100) → top (100,10) → right (190,100) -->
             <path
               class="sun-arc-path"
+              id="sun-arc-path"
+              d="M 10 100 Q 100 10 190 100"
+              fill="none"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <path
+              class="sun-arc-progress"
+              id="sun-arc-progress"
               d="M 10 100 Q 100 10 190 100"
               fill="none"
               stroke="url(#sunArcGrad)"
@@ -331,12 +343,30 @@
 
         <!-- Hourly temperature sparkline -->
         <section class="sparkline-section" aria-label="Today's temperature trend">
-          <svg
-            class="temp-sparkline"
-            id="temp-sparkline"
-            viewBox="0 0 300 60"
-            preserveAspectRatio="none"
-          ></svg>
+          <div class="sparkline-head">
+            <span class="section-label">Temperature · Today</span>
+            <span class="sparkline-range" aria-label="Temperature range today">
+              <span class="spark-min">--°</span>
+              <span class="spark-sep">–</span>
+              <span class="spark-max">--°</span>
+            </span>
+          </div>
+          <div class="sparkline-plot" id="sparkline-plot">
+            <svg
+              class="temp-sparkline"
+              id="temp-sparkline"
+              viewBox="0 0 300 60"
+              preserveAspectRatio="none"
+            ></svg>
+            <span class="spark-cursor" id="spark-cursor" aria-hidden="true"></span>
+            <span class="spark-dot" id="spark-dot" aria-hidden="true"></span>
+            <span class="spark-tip" id="spark-tip" role="status"></span>
+          </div>
+          <div class="sparkline-axis">
+            <span class="spark-x spark-x-start">--</span>
+            <span class="spark-x spark-x-mid">--</span>
+            <span class="spark-x spark-x-end">--</span>
+          </div>
         </section>
 
         <!-- Forecast section with 5-day / Hourly toggle -->
@@ -401,22 +431,18 @@
 
           <div class="stat-tile">
             <span class="stat-tile-label">Wind</span>
-            <span class="stat-tile-value wind-value skeleton-text" aria-label="Wind speed"
-              >-- kph</span
-            >
+            <div class="stat-tile-main">
+              <span class="stat-tile-value wind-value skeleton-text" aria-label="Wind speed"
+                >-- kph</span
+              >
+              <span class="stat-note wind-dir" aria-label="Wind direction"></span>
+            </div>
           </div>
 
           <div class="stat-tile">
             <span class="stat-tile-label">Pressure</span>
             <span class="stat-tile-value pressure-value skeleton-text" aria-label="Pressure"
               >-- mb</span
-            >
-          </div>
-
-          <div class="stat-tile">
-            <span class="stat-tile-label">Cloud Cover</span>
-            <span class="stat-tile-value cloud-value skeleton-text" aria-label="Cloud cover"
-              >--%</span
             >
           </div>
 
@@ -451,7 +477,7 @@
             >
           </div>
 
-          <div class="stat-tile">
+          <div class="stat-tile stat-tile--wide">
             <span class="stat-tile-label">Moon Phase</span>
             <div class="stat-tile-main">
               <span class="moon-emoji" aria-hidden="true"></span>
