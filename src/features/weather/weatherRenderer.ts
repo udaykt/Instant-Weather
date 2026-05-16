@@ -11,6 +11,7 @@ import type {
 } from '@/shared/types/weatherTypes';
 import { formatForecastDate, getDaytimePhase } from '@/shared/utils/weatherUtils';
 import { getBestOutdoorWindow } from '@/features/weather/bestTimeAdvisor';
+import { flagUrl } from '@/shared/utils/countryFlags';
 
 const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -54,6 +55,34 @@ let unitSnapshot: UnitSnapshot | null = null;
 
 const cToF = (c: number): number => (c * 9) / 5 + 32;
 
+// Smoothly counts the hero temperature to its target. Reduced-motion users get
+// an instant set; NaN/equal values short-circuit so it can never wedge.
+let tempRaf = 0;
+function countUpTemp(el: HTMLElement, to: number): void {
+  const target = Math.round(to);
+  if (!Number.isFinite(target)) return;
+  if (reducedMotion) {
+    el.textContent = `${target}°`;
+    return;
+  }
+  const parsed = parseInt(el.textContent ?? '', 10);
+  const from = Number.isFinite(parsed) ? parsed : target;
+  if (from === target) {
+    el.textContent = `${target}°`;
+    return;
+  }
+  cancelAnimationFrame(tempRaf);
+  const dur = 480;
+  const t0 = performance.now();
+  const step = (now: number): void => {
+    const p = Math.min(1, (now - t0) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = `${Math.round(from + (target - from) * eased)}°`;
+    if (p < 1) tempRaf = requestAnimationFrame(step);
+  };
+  tempRaf = requestAnimationFrame(step);
+}
+
 export function getSavedUnit(): Unit {
   return localStorage.getItem('tempUnit') === 'F' ? 'F' : 'C';
 }
@@ -68,6 +97,14 @@ export function applyTempUnit(unit: Unit): void {
     btn.setAttribute('aria-pressed', String(on));
   });
 
+  // Slide the pill behind the active button (measured, so it never drifts).
+  const toggle = qsMaybe<HTMLElement>('.unit-toggle');
+  const activeBtn = qsMaybe<HTMLButtonElement>(`.unit-btn[data-unit="${unit}"]`);
+  if (toggle && activeBtn && activeBtn.offsetWidth > 0) {
+    toggle.style.setProperty('--unit-x', `${activeBtn.offsetLeft}px`);
+    toggle.style.setProperty('--unit-w', `${activeBtn.offsetWidth}px`);
+  }
+
   // Sidebar quick-city temps carry both values as data attributes
   document.querySelectorAll<HTMLElement>('.qc-temp[data-c]').forEach((el) => {
     const raw = unit === 'C' ? el.dataset.c : el.dataset.f;
@@ -79,7 +116,7 @@ export function applyTempUnit(unit: Unit): void {
   const isC = unit === 'C';
 
   const tempEl = qsMaybe<HTMLElement>('.temperature-reading');
-  if (tempEl) tempEl.textContent = `${Math.round(isC ? s.tC : s.tF)}°`;
+  if (tempEl) countUpTemp(tempEl, isC ? s.tC : s.tF);
 
   const feelEl = qsMaybe<HTMLElement>('.temperature-real-feel');
   if (feelEl) feelEl.textContent = `Feels like ${Math.round(isC ? s.flC : s.flF)}°${unit}`;
@@ -219,8 +256,24 @@ function parseTimeToMinutes(timeStr: string): number {
   return h * 60 + m;
 }
 
+// The dot must travel *along* the curve (not cut a straight chord across it),
+// so we drive it by arc-length using the SVG path itself and reveal a matching
+// progress trail. prevSunLen lets each update glide from where it was.
+let prevSunLen = 0;
+let sunRaf = 0;
+
+function bezierPoint(t: number): { x: number; y: number } {
+  // Quadratic Bézier P0=(10,100) P1=(100,10) P2=(190,100) — happy-dom fallback.
+  return {
+    x: (1 - t) * (1 - t) * 10 + 2 * (1 - t) * t * 100 + t * t * 190,
+    y: (1 - t) * (1 - t) * 100 + 2 * (1 - t) * t * 10 + t * t * 100,
+  };
+}
+
 function renderSunArc(sunriseStr: string, sunsetStr: string, localtime: string): void {
   const dot = document.getElementById('sun-dot') as SVGCircleElement | null;
+  const path = document.getElementById('sun-arc-path') as unknown as SVGPathElement | null;
+  const progress = document.getElementById('sun-arc-progress') as unknown as SVGPathElement | null;
   if (!dot) return;
 
   const [, timePart] = localtime.split(' ');
@@ -236,32 +289,130 @@ function renderSunArc(sunriseStr: string, sunsetStr: string, localtime: string):
         ? 0
         : 1;
 
-  // Parametric point on quadratic Bézier: P0=(10,100) P1=(100,10) P2=(190,100)
-  const x = (1 - t) * (1 - t) * 10 + 2 * (1 - t) * t * 100 + t * t * 190;
-  const y = (1 - t) * (1 - t) * 100 + 2 * (1 - t) * t * 10 + t * t * 100;
+  // happy-dom / older engines: no path geometry → snap via Bézier math.
+  if (!path || typeof path.getTotalLength !== 'function') {
+    const p = bezierPoint(t);
+    dot.setAttribute('cx', String(Math.round(p.x * 10) / 10));
+    dot.setAttribute('cy', String(Math.round(p.y * 10) / 10));
+    return;
+  }
 
-  dot.setAttribute('cx', String(Math.round(x * 10) / 10));
-  dot.setAttribute('cy', String(Math.round(y * 10) / 10));
+  const total = path.getTotalLength();
+  const targetLen = total * t;
+
+  if (progress) {
+    progress.style.strokeDasharray = String(total);
+  }
+
+  const apply = (len: number): void => {
+    const pt = path.getPointAtLength(len);
+    dot.setAttribute('cx', (Math.round(pt.x * 10) / 10).toString());
+    dot.setAttribute('cy', (Math.round(pt.y * 10) / 10).toString());
+    if (progress) progress.style.strokeDashoffset = String(total - len);
+  };
+
+  if (reducedMotion) {
+    prevSunLen = targetLen;
+    apply(targetLen);
+    return;
+  }
+
+  cancelAnimationFrame(sunRaf);
+  const fromLen = prevSunLen;
+  const startTime = performance.now();
+  const dur = 1100;
+  const tick = (now: number): void => {
+    const p = Math.min(1, (now - startTime) / dur);
+    const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+    const len = fromLen + (targetLen - fromLen) * eased;
+    apply(len);
+    if (p < 1) {
+      sunRaf = requestAnimationFrame(tick);
+    } else {
+      prevSunLen = targetLen;
+    }
+  };
+  sunRaf = requestAnimationFrame(tick);
 }
 
-// ── Hourly sparkline (Feature 3) ──────────────────────────────────────────────
+// ── Hourly sparkline (Features 3 + 16) ────────────────────────────────────────
+const SPARK_H = 60;
+const SPARK_PAD = 4;
+
+// Geometry kept at module scope so the (once-bound) pointer handlers can read
+// the latest data without rebinding on every re-render.
+let sparkHours: HourData[] = [];
+let sparkMin = 0;
+let sparkRange = 1;
+let sparkBound = false;
+
+/** Fractional [0..1] vertical position of a temperature within the plot. */
+function sparkFracY(t: number): number {
+  const y = SPARK_H - SPARK_PAD - ((t - sparkMin) / sparkRange) * (SPARK_H - SPARK_PAD * 2);
+  return y / SPARK_H;
+}
+
+function hourLabel(time: string): string {
+  const tp = time.split(' ')[1] ?? time;
+  const hr = parseInt(tp.split(':')[0], 10);
+  if (Number.isNaN(hr)) return '--';
+  return hr === 0 ? '12 AM' : hr < 12 ? `${hr} AM` : hr === 12 ? '12 PM' : `${hr - 12} PM`;
+}
+
+function placeSparkDot(index: number): void {
+  const dot = document.getElementById('spark-dot');
+  if (!dot || index < 0 || index >= sparkHours.length) return;
+  const fx = (index / Math.max(1, sparkHours.length - 1)) * 100;
+  const fy = sparkFracY(sparkHours[index].temp_c) * 100;
+  dot.style.setProperty('--dx', `${fx}%`);
+  dot.style.setProperty('--dy', `${fy}%`);
+}
+
+function bindSparkHover(): void {
+  if (sparkBound) return;
+  const plot = document.getElementById('sparkline-plot');
+  const cursor = document.getElementById('spark-cursor');
+  const tip = document.getElementById('spark-tip');
+  if (!plot || !cursor || !tip) return;
+  sparkBound = true;
+
+  const move = (clientX: number): void => {
+    if (sparkHours.length === 0) return;
+    const rect = plot.getBoundingClientRect();
+    const frac = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const idx = Math.round(frac * (sparkHours.length - 1));
+    const h = sparkHours[idx];
+    const fx = (idx / Math.max(1, sparkHours.length - 1)) * 100;
+    cursor.style.setProperty('--cx', `${fx}%`);
+    tip.style.setProperty('--cx', `${fx}%`);
+    tip.textContent = `${hourLabel(h.time)} · ${Math.round(h.temp_c)}°`;
+    plot.classList.add('is-hover');
+  };
+
+  plot.addEventListener('pointermove', (e) => move(e.clientX));
+  plot.addEventListener('pointerdown', (e) => move(e.clientX));
+  plot.addEventListener('pointerleave', () => plot.classList.remove('is-hover'));
+  plot.addEventListener('pointercancel', () => plot.classList.remove('is-hover'));
+}
+
 export function renderSparkline(hours: HourData[], currentHour: number): void {
   const svg = document.getElementById('temp-sparkline') as SVGSVGElement | null;
   if (!svg || hours.length === 0) return;
 
   const W = 300;
-  const H = 60;
-  const PAD = 4;
   const temps = hours.map((h) => h.temp_c);
   const min = Math.min(...temps);
   const max = Math.max(...temps);
-  const range = max - min || 1;
+
+  sparkHours = hours;
+  sparkMin = min;
+  sparkRange = max - min || 1;
 
   const toX = (i: number) => (i / (hours.length - 1)) * W;
-  const toY = (t: number) => H - PAD - ((t - min) / range) * (H - PAD * 2);
+  const toY = (t: number) => sparkFracY(t) * SPARK_H;
 
   const points = hours.map((h, i) => `${toX(i).toFixed(1)},${toY(h.temp_c).toFixed(1)}`).join(' ');
-  const polyPoints = `${points} ${W},${H} 0,${H}`;
+  const polyPoints = `${points} ${W},${SPARK_H} 0,${SPARK_H}`;
 
   const gradId = 'sparkGrad';
   svg.innerHTML = `
@@ -275,27 +426,20 @@ export function renderSparkline(hours: HourData[], currentHour: number): void {
     <polyline points="${points}" fill="none" stroke="rgba(255,220,100,0.75)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
   `;
 
-  // Current-hour marker
-  if (currentHour >= 0 && currentHour < hours.length) {
-    const cx = toX(currentHour).toFixed(1);
-    const cy = toY(hours[currentHour].temp_c).toFixed(1);
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', cx);
-    line.setAttribute('y1', cy);
-    line.setAttribute('x2', cx);
-    line.setAttribute('y2', String(H));
-    line.setAttribute('stroke', 'rgba(255,255,255,0.22)');
-    line.setAttribute('stroke-width', '1');
-    svg.appendChild(line);
+  // Y axis: temperature range. X axis: start / midday / end times.
+  const setText = (sel: string, val: string): void => {
+    const el = qsMaybe<HTMLElement>(sel);
+    if (el) el.textContent = val;
+  };
+  setText('.spark-min', `${Math.round(min)}°`);
+  setText('.spark-max', `${Math.round(max)}°`);
+  setText('.spark-x-start', hourLabel(hours[0].time));
+  setText('.spark-x-mid', hourLabel(hours[Math.floor(hours.length / 2)].time));
+  setText('.spark-x-end', hourLabel(hours[hours.length - 1].time));
 
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', cx);
-    circle.setAttribute('cy', cy);
-    circle.setAttribute('r', '3.5');
-    circle.setAttribute('fill', '#fff');
-    circle.setAttribute('filter', 'drop-shadow(0 0 4px rgba(255,255,255,0.9))');
-    svg.appendChild(circle);
-  }
+  // Perfect-circle current-hour marker (HTML overlay, never distorted).
+  placeSparkDot(Math.max(0, Math.min(hours.length - 1, currentHour)));
+  bindSparkHover();
 }
 
 // ── Hourly forecast cards (Feature 5) ────────────────────────────────────────
@@ -512,6 +656,22 @@ export function renderForecast(
   qs<HTMLSpanElement>('.city').textContent = location.name;
   qs<HTMLSpanElement>('.country').textContent = location.country;
 
+  const flagEl = qsMaybe<HTMLImageElement>('.country-flag');
+  if (flagEl) {
+    const url = flagUrl(location.country);
+    if (url) {
+      flagEl.src = url;
+      flagEl.alt = `${location.country} flag`;
+      flagEl.hidden = false;
+      flagEl.onerror = () => {
+        flagEl.hidden = true;
+      };
+    } else {
+      flagEl.hidden = true;
+      flagEl.removeAttribute('src');
+    }
+  }
+
   // ── Condition text + icon ─────────────────────────────────────────────────────
   const { condition } = current;
   qs<HTMLDivElement>('.weather-description').textContent = condition.text;
@@ -554,7 +714,9 @@ export function renderForecast(
 
   // ── Core stats ────────────────────────────────────────────────────────────────
   qs<HTMLElement>('.humidity-value').textContent = `${current.humidity}%`;
-  qs<HTMLElement>('.wind-value').textContent = `${current.wind_kph} kph ${current.wind_dir}`;
+  qs<HTMLElement>('.wind-value').textContent = `${Math.round(current.wind_kph)} kph`;
+  const windDirEl = qsMaybe<HTMLElement>('.wind-dir');
+  if (windDirEl) windDirEl.textContent = current.wind_dir;
   const centerWindEl = qsMaybe<HTMLElement>('.center-wind-val');
   if (centerWindEl) centerWindEl.textContent = `${Math.round(current.wind_kph)} kph`;
   qs<HTMLElement>('.pressure-value').textContent = `${current.pressure_mb} mb`;
@@ -579,10 +741,6 @@ export function renderForecast(
   // ── Precipitation ─────────────────────────────────────────────────────────────
   const precipEl = qsMaybe<HTMLElement>('.precip-value');
   if (precipEl) precipEl.textContent = `${current.precip_mm} mm`;
-
-  // ── Cloud Cover ───────────────────────────────────────────────────────────────
-  const cloudEl = qsMaybe<HTMLElement>('.cloud-value');
-  if (cloudEl) cloudEl.textContent = `${current.cloud}%`;
 
   // ── Dew Point note (the value itself is rendered by applyTempUnit) ───────────
   const dewNoteEl = qsMaybe<HTMLElement>('.dewpoint-note');
