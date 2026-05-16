@@ -1,124 +1,114 @@
 <div align="center">
 
-# 🌤️ Instant Weather
+# Instant Weather
 
-**Real-time weather, 5-day forecast, air quality and astro data for any city — wrapped in an animated glass UI.**
+**Real-time weather, 5-day forecast, air quality and astro data for any city — wrapped in an animated aurora glass UI.**
 
-[![Live Demo](https://img.shields.io/badge/demo-live-3fb950?style=flat-square)](https://instant-weather.pages.dev)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-instant--weather.pages.dev-f38020?style=flat-square&logo=cloudflare&logoColor=white)](https://instant-weather.pages.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5-646cff?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-f38020?style=flat-square&logo=cloudflare&logoColor=white)](https://pages.cloudflare.com/)
 [![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8?style=flat-square)](https://web.dev/progressive-web-apps/)
-
-<!-- Replace with a real screenshot/GIF: docs/preview.png -->
-<img src="docs/preview.png" alt="Instant Weather preview" width="800" />
 
 </div>
 
 ---
 
-## ✨ Features
+## What it does
 
-- **Live conditions** — temperature, feels-like, hi/lo, humidity, wind, pressure, dew point, UV, visibility, precipitation.
-- **5-day & hourly forecast** with an interactive temperature sparkline (hover/tap any hour).
-- **Air Quality Index** with a pollutant breakdown popover.
-- **Astro** — sunrise/sunset with a sun that travels its arc, plus moon phase.
-- **Severe-weather alerts** banner.
-- **Dynamic aurora theme** that retints to the current condition and time of day.
-- **°C / °F** with an animated segmented toggle; choice is remembered.
-- **Geolocation** on first load, city search with autocomplete, quick-city shortcuts.
-- **Share** the panel as a PNG (download or copy to clipboard).
-- **Installable PWA**, offline-capable, fully responsive (tested down to iPhone 16), reduced-motion aware.
+Search any city in the world and get:
 
-## 🧱 Tech Stack
+- Live conditions — temperature, feels-like, hi/lo, humidity, wind speed + direction, pressure, UV index, visibility, dew point, precipitation
+- 5-day forecast cards with per-day rain/snow chance
+- Interactive hourly temperature sparkline (hover or tap any hour)
+- Air Quality Index with pollutant breakdown
+- Sunrise/sunset with an animated sun arc, moon phase
+- Severe-weather alerts banner
+- Dynamic aurora theme that retints to the current weather condition and time of day
+- °C / °F toggle (remembered across sessions)
+- Share the panel as a PNG (download or copy to clipboard)
 
-| Layer      | Choice                                                           |
-| ---------- | ---------------------------------------------------------------- |
-| Language   | TypeScript (strict)                                              |
-| Build      | Vite 5 (multi-page) + `vite-plugin-pwa`                          |
-| Styling    | Hand-authored CSS, design-token system, glassmorphism            |
-| Data       | [WeatherAPI.com](https://www.weatherapi.com/) via a server proxy |
-| Validation | Zod schemas on every API response                                |
-| Hosting    | Cloudflare Pages + Pages Functions (edge)                        |
-| Analytics  | Cloudflare Web Analytics (cookieless)                            |
-| Quality    | ESLint, Prettier, Vitest, Playwright                             |
+Works offline as an installable PWA. Fully responsive — tested down to iPhone SE.
 
-## 🏗️ Architecture
+---
+
+## Tech stack
+
+| Layer             | Choice                                                       |
+| ----------------- | ------------------------------------------------------------ |
+| Language          | TypeScript 5 (strict)                                        |
+| Build             | Vite 5 multi-page + vite-plugin-pwa                          |
+| Styling           | Hand-authored CSS with design-token system + glassmorphism   |
+| Data              | WeatherAPI.com via an edge proxy                             |
+| Schema validation | Zod on every API response                                    |
+| Hosting           | Cloudflare Pages + Pages Functions                           |
+| Analytics         | Cloudflare Web Analytics (cookieless, no GDPR banner needed) |
+| Quality           | ESLint · Prettier · Vitest · Playwright                      |
+
+---
+
+## Architecture
 
 ```
 src/
-  main.ts                     app wiring
+  main.ts                      app wiring + geolocation + recent cities
   features/
     weather/
-      forecastService.ts      typed API client + cache + quota errors
-      weatherRenderer.ts      orchestrator
-      render/                 one focused module per UI concern
+      forecastService.ts       typed API client, cache, quota error handling
+      weatherRenderer.ts       render orchestrator
+      render/                  one module per UI concern
         unitSystem · sunArc · sparkline · forecastCards
-        airQuality · alerts · moonPhase · weatherIcon · aurora · dom
-    search/  cities/  share/
-  shared/  types · schemas · utils
-  styles/                     14 cascade-ordered CSS partials
+        airQuality · alerts · moonPhase · weatherIcon · aurora
+    search/                    city autocomplete
+    cities/                    quick-city sidebar (recents + popular defaults)
+    share/                     PNG share card
+  shared/
+    types · schemas · utils · countryFlags
+  styles/                      14 cascade-ordered CSS partials
 functions/
-  api/{weather,weather-coords,search}.js   Cloudflare Pages Functions
-  _lib/weatherProxy.js                     shared proxy + key rotation
+  api/weather.js               GET /api/weather?city=
+  api/weather-coords.js        GET /api/weather-coords?lat=&lon=
+  api/search.js                GET /api/search?q=
+  _lib/weatherProxy.js         shared proxy + key rotation + failover
 ```
 
-The browser never sees an API key — all WeatherAPI calls go through the
-edge proxy, which **rotates a pool of keys** and **fails over automatically**
-when one hits its quota. Successful responses are edge-cached so repeat
-lookups don't burn calls; when every key is exhausted the UI shows a
-friendly "try again later" message.
+The browser never sees an API key. All WeatherAPI calls route through the edge proxy, which rotates a pool of keys and fails over automatically when one hits its quota. Responses are edge-cached (10 min) so repeat lookups don't burn API calls.
 
-## 🚀 Local Development
+---
+
+## Local development
 
 ```bash
 git clone https://github.com/udaykt/Instant-Weather.git
 cd Instant-Weather
 npm install
-cp .env.example .env      # add your WeatherAPI key(s)
-npm run dev               # http://localhost:5173/weather.html
+cp .env.example .env      # add your WeatherAPI key
+npm run dev               # http://localhost:5173
 ```
 
-The Vite dev server proxies `/api/*` itself, so no separate backend is
-needed locally.
+| Script              | Purpose                    |
+| ------------------- | -------------------------- |
+| `npm run dev`       | Dev server with HMR        |
+| `npm run build`     | Production build → `dist/` |
+| `npm run typecheck` | `tsc --noEmit`             |
+| `npm test`          | Unit tests (Vitest)        |
+| `npm run lint`      | ESLint                     |
+| `npm run test:e2e`  | Playwright end-to-end      |
 
-| Script              | Purpose                   |
-| ------------------- | ------------------------- |
-| `npm run dev`       | Dev server (HMR)          |
-| `npm run build`     | Production build → `dist` |
-| `npm run preview`   | Preview the build         |
-| `npm run typecheck` | `tsc --noEmit`            |
-| `npm test`          | Unit tests (Vitest)       |
-| `npm run lint`      | ESLint                    |
+---
 
-## ☁️ Deployment (Cloudflare Pages)
+## Deployment
 
-1. Connect the repo in the Cloudflare dashboard → **Pages**.
-2. Build command `npm run build`, output directory `dist`.
-3. Add environment variable **`WEATHER_API_KEYS`** = `key1,key2,key3`
-   (comma-separated pool — add as many free keys as you have for more
-   monthly headroom).
-4. (Optional) Enable **Web Analytics** and paste the token into the
-   `data-cf-beacon` script in `index.html` / `weather.html`.
+Hosted on Cloudflare Pages. Pushes to `master` auto-deploy.
 
-`functions/` is picked up automatically as Pages Functions — no extra
-config. `wrangler.toml` documents the build output directory.
+To self-host:
 
-## 🔑 API Limits
+1. Fork the repo → Cloudflare Pages → Connect to Git
+2. Build command: `npm run build` · Output directory: `dist`
+3. Add environment variable `WEATHER_API_KEYS` = comma-separated pool of [WeatherAPI.com](https://www.weatherapi.com/) free keys
+4. Enable Web Analytics in the Cloudflare dashboard and add the token to `index.html` + `weather.html`
 
-WeatherAPI's free plan is generous but finite (and caps forecast depth).
-The key-rotation pool multiplies headroom, edge caching cuts duplicate
-calls, and the app degrades gracefully with a clear message instead of
-breaking when limits are reached.
+---
 
-## 📣 Showcasing on GitHub
-
-- Pin this repo; add a crisp `docs/preview.png` and a short demo GIF at the top.
-- Fill the repo **About**: description, live URL, topics
-  (`weather`, `typescript`, `vite`, `pwa`, `cloudflare-pages`).
-- Add a **social preview image** (Settings → Social preview).
-- Keep the live demo link green and working — it gets clicked first.
-
-## 📄 License
+## License
 
 MIT © Uday
