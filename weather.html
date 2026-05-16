@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Real-time weather forecasts for any city worldwide." />
     <meta name="theme-color" content="#141e30" />
+    <link rel="preconnect" href="https://cdn.weatherapi.com" crossorigin />
+    <link rel="preconnect" href="https://flagcdn.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.weatherapi.com" />
     <link rel="stylesheet" href="/src/style.css" />
     <link rel="icon" type="image/png" href="/assets/images/sun.png" />
     <link rel="manifest" href="/manifest.json" />
@@ -44,18 +47,15 @@
             <button class="search-button" aria-label="Search">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                width="17"
+                height="17"
+                viewBox="0 0 256 256"
+                fill="currentColor"
                 aria-hidden="true"
               >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <path
+                  d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                />
               </svg>
             </button>
             <ul
@@ -71,22 +71,18 @@
         <button class="locate-btn" id="locate-btn" aria-label="Use my current location">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            width="15"
+            height="15"
+            viewBox="0 0 256 256"
+            fill="currentColor"
             aria-hidden="true"
           >
-            <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="3" />
-            <line x1="12" y1="2" x2="12" y2="6" />
-            <line x1="12" y1="18" x2="12" y2="22" />
-            <line x1="2" y1="12" x2="6" y2="12" />
-            <line x1="18" y1="12" x2="22" y2="12" />
+            <path
+              d="M232,120h-8.34A96.14,96.14,0,0,0,136,32.34V24a8,8,0,0,0-16,0v8.34A96.14,96.14,0,0,0,32.34,120H24a8,8,0,0,0,0,16h8.34A96.14,96.14,0,0,0,120,223.66V232a8,8,0,0,0,16,0v-8.34A96.14,96.14,0,0,0,223.66,136H232a8,8,0,0,0,0-16Zm-96,87.6V200a8,8,0,0,0-16,0v7.6A80.15,80.15,0,0,1,48.4,136H56a8,8,0,0,0,0-16H48.4A80.15,80.15,0,0,1,120,48.4V56a8,8,0,0,0,16,0V48.4A80.15,80.15,0,0,1,207.6,120H200a8,8,0,0,0,0,16h7.6A80.15,80.15,0,0,1,136,207.6Z"
+            />
+            <path
+              d="M128,88a40,40,0,1,0,40,40A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152Z"
+            />
           </svg>
           My Location
         </button>
@@ -121,12 +117,12 @@
             <svg
               class="pin-icon"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
+              viewBox="0 0 256 256"
               fill="currentColor"
               aria-hidden="true"
             >
               <path
-                d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"
+                d="M128,64a40,40,0,1,0,40,40A40,40,0,0,0,128,64Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,128Zm0-112a88.1,88.1,0,0,0-88,88c0,31.4,14.51,64.68,42,96.25a254.19,254.19,0,0,0,41.45,38.3,8,8,0,0,0,9.18,0A254.19,254.19,0,0,0,174,200.25c27.45-31.57,42-64.85,42-96.25A88.1,88.1,0,0,0,128,16Zm0,206c-16.53-13-72-60.75-72-118a72,72,0,0,1,144,0C200,161.23,144.53,209,128,222Z"
               />
             </svg>
             <div class="location-text">
@@ -143,40 +139,32 @@
                 <svg
                   class="dt-icon"
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
                   aria-hidden="true"
                 >
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                <span class="date skeleton-text" aria-label="Date">Loading...</span>
-              </div>
-              <div class="dt-pill">
-                <svg
-                  class="dt-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
+                  <path
+                    d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"
+                  />
                 </svg>
                 <div class="time-stack">
                   <span class="time skeleton-text" aria-label="Time">00:00</span>
                   <span class="part-of-day skeleton-text" aria-label="Time of day">Loading</span>
                 </div>
+              </div>
+              <div class="dt-pill">
+                <svg
+                  class="dt-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"
+                  />
+                </svg>
+                <span class="date skeleton-text" aria-label="Date">Loading...</span>
               </div>
             </div>
             <button class="share-btn" id="share-btn" aria-label="Share weather card">
@@ -206,22 +194,20 @@
             <svg
               class="unit-toggle-ico"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              viewBox="0 0 256 256"
+              fill="currentColor"
               aria-hidden="true"
             >
-              <path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0z" />
+              <path
+                d="M136,153V88a8,8,0,0,0-16,0v65a32,32,0,1,0,16,0Zm32-19V48a40,40,0,0,0-80,0v86a64,64,0,1,0,80,0Zm-40,98a48,48,0,0,1-27.42-87.4A8,8,0,0,0,104,138V48a24,24,0,0,1,48,0v90a8,8,0,0,0,3.42,6.56A48,48,0,0,1,128,232Z"
+              />
             </svg>
             <button class="unit-btn active" data-unit="C" aria-pressed="true">°C</button>
             <button class="unit-btn" data-unit="F" aria-pressed="false">°F</button>
           </div>
 
           <div class="hero-row">
-            <div class="weather-icon-lottie" id="icon-lottie">
+            <div class="weather-icon-wrap">
               <img
                 class="weather-icon"
                 id="icon"
@@ -229,6 +215,8 @@
                 alt="Weather condition icon"
                 width="132"
                 height="132"
+                decoding="async"
+                hidden
               />
             </div>
             <div class="temperature-reading skeleton-text" aria-label="Temperature">--°</div>
@@ -269,17 +257,14 @@
           <div class="sun-time-item">
             <svg
               class="sun-time-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              fill="currentColor"
               aria-hidden="true"
             >
-              <path d="M12 3v3M5.2 10.2 7 12M3 17h2M19 17h2M17 12l1.8-1.8M8 17a4 4 0 0 1 8 0" />
-              <path d="M2 21h20" />
-              <path d="m9 6 3-3 3 3" />
+              <path
+                d="M240,152H199.55a73.54,73.54,0,0,0,.45-8,72,72,0,0,0-144,0,73.54,73.54,0,0,0,.45,8H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM72,144a56,56,0,1,1,111.41,8H72.59A56.13,56.13,0,0,1,72,144Zm144,56a8,8,0,0,1-8,8H48a8,8,0,0,1,0-16H208A8,8,0,0,1,216,200ZM72.84,43.58a8,8,0,0,1,14.32-7.16l8,16a8,8,0,0,1-14.32,7.16Zm-56,48.84a8,8,0,0,1,10.74-3.57l16,8a8,8,0,0,1-7.16,14.31l-16-8A8,8,0,0,1,16.84,92.42Zm192,15.16a8,8,0,0,1,3.58-10.73l16-8a8,8,0,1,1,7.16,14.31l-16,8a8,8,0,0,1-10.74-3.58Zm-48-55.16,8-16a8,8,0,0,1,14.32,7.16l-8,16a8,8,0,1,1-14.32-7.16Z"
+              />
             </svg>
             <div class="sun-time-body">
               <span class="sun-time-label">Sunrise</span>
@@ -320,17 +305,14 @@
           <div class="sun-time-item">
             <svg
               class="sun-time-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              fill="currentColor"
               aria-hidden="true"
             >
-              <path d="M5.2 10.2 7 12M3 17h2M19 17h2M17 12l1.8-1.8M8 17a4 4 0 0 1 8 0" />
-              <path d="M2 21h20" />
-              <path d="M12 6V3M9 5l3 3 3-3" />
+              <path
+                d="M240,152H199.55a73.54,73.54,0,0,0,.45-8,72,72,0,0,0-144,0,73.54,73.54,0,0,0,.45,8H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM72,144a56,56,0,1,1,111.41,8H72.59A56.13,56.13,0,0,1,72,144Zm144,56a8,8,0,0,1-8,8H48a8,8,0,0,1,0-16H208A8,8,0,0,1,216,200ZM72.84,43.58a8,8,0,0,1,14.32-7.16l8,16a8,8,0,0,1-14.32,7.16Zm-56,48.84a8,8,0,0,1,10.74-3.57l16,8a8,8,0,0,1-7.16,14.31l-16-8A8,8,0,0,1,16.84,92.42Zm192,15.16a8,8,0,0,1,3.58-10.73l16-8a8,8,0,1,1,7.16,14.31l-16,8a8,8,0,0,1-10.74-3.58Zm-48-55.16,8-16a8,8,0,0,1,14.32,7.16l-8,16a8,8,0,1,1-14.32-7.16Z"
+              />
             </svg>
             <div class="sun-time-body">
               <span class="sun-time-label">Sunset</span>
@@ -492,5 +474,13 @@
     <!-- /.weather-app -->
 
     <script type="module" src="/src/main.ts"></script>
+
+    <!-- Cloudflare Web Analytics — privacy-first, cookieless. Replace the
+         token with the one from Cloudflare dashboard → Web Analytics. -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "REPLACE_WITH_CLOUDFLARE_TOKEN"}'
+    ></script>
   </body>
 </html>

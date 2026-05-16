@@ -1,6 +1,6 @@
-// shareCard.ts — capture the main panel as PNG, offer download + clipboard copy
-
-import html2canvas from 'html2canvas';
+// shareCard.ts — capture the main panel as PNG, offer download + clipboard copy.
+// html2canvas (~200 KB) is loaded lazily on first share so it never weighs
+// down the initial page load.
 
 export async function shareWeatherCard(): Promise<void> {
   const panel = document.querySelector<HTMLElement>('.main-panel');
@@ -11,6 +11,7 @@ export async function shareWeatherCard(): Promise<void> {
 
   let canvas: HTMLCanvasElement;
   try {
+    const { default: html2canvas } = await import('html2canvas');
     canvas = await html2canvas(panel, {
       backgroundColor: null,
       scale: 2,

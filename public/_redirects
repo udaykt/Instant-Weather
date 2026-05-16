@@ -1,0 +1,3 @@
+# Cloudflare Pages: static files (index.html, weather.html, assets, /api/*)
+# are served first; anything else falls back to the landing page.
+/*  /index.html  200

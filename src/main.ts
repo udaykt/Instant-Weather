@@ -1,6 +1,10 @@
 // main.ts — application entry point
 
-import { fetchForecastByCity, fetchForecastByCoords } from '@/features/weather/forecastService';
+import {
+  fetchForecastByCity,
+  fetchForecastByCoords,
+  QuotaExhaustedError,
+} from '@/features/weather/forecastService';
 import {
   renderForecast,
   applyTempUnit,
@@ -45,8 +49,12 @@ async function fetchAndDisplay(promise: Promise<WeatherResponse>): Promise<void>
     if (weatherData.location?.name) {
       trackRecentCity(weatherData.location.name);
     }
-  } catch {
-    showErrorToast('Could not fetch weather data. Please try again.');
+  } catch (err) {
+    showErrorToast(
+      err instanceof QuotaExhaustedError
+        ? 'Weather service is busy right now — please try again in a little while.'
+        : 'Could not fetch weather data. Please try again.',
+    );
   } finally {
     searchBtn.disabled = false;
   }
