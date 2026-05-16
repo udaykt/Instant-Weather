@@ -1,0 +1,29 @@
+/* ── 3-Column App Layout ────────────────────────────────────────────────── */
+.weather-app {
+  display: grid;
+  grid-template-areas:
+    'sidebar'
+    'main'
+    'stats';
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--s-4);
+  padding-top: max(var(--s-4), env(safe-area-inset-top));
+  padding-bottom: max(var(--s-4), env(safe-area-inset-bottom));
+  padding-left: max(var(--s-4), env(safe-area-inset-left));
+  padding-right: max(var(--s-4), env(safe-area-inset-right));
+}
+
+@media (min-width: 1024px) {
+  .weather-app {
+    grid-template-areas: 'sidebar main stats';
+    grid-template-columns: 275px 1fr 315px;
+    grid-template-rows: 1fr;
+    align-items: start;
+    padding: var(--s-5);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,89 @@
+/* ── Home page ──────────────────────────────────────────────────────────── */
+body.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url('/assets/images/bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.home-container {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 48px 40px;
+  border-radius: 24px;
+  color: #fff;
+  max-width: 560px;
+  text-align: center;
+  box-shadow:
+    0 12px 60px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.home-logo {
+  width: 90px;
+  margin-bottom: 20px;
+}
+
+.home-greeting {
+  font-size: 2.4rem;
+  font-family: Gilroy-Heavy, sans-serif;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.home-tagline {
+  font-size: 1.05rem;
+  font-family: Gilroy-Medium, sans-serif;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.home-features {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.home-feature-chip {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-pill);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-family: Gilroy-Bold, sans-serif;
+  letter-spacing: 0.4px;
+  color: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+}
+
+.home-button {
+  display: inline-block;
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  font-family: Gilroy-Bold, sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #3498db, #2271b3);
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(52, 152, 219, 0.45);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.home-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(52, 152, 219, 0.55);
+}
+.home-button:active {
+  transform: translateY(0);
+}

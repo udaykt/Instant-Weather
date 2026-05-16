@@ -1,11 +1,17 @@
 node_modules/
 dist/
 build/
+
+# Secrets & local env
 .env
+.dev.vars
 .DS_Store
 *.log
 *.tmp
-netlify.toml
+
+# Tooling / editor
+.claude/
+.wrangler/
 
 # Playwright
 playwright-report/

@@ -120,10 +120,6 @@ export default defineConfig(({ mode }) => {
       environmentMatchGlobs: [['tests/ui.test.ts', 'happy-dom']],
       alias: [
         {
-          find: 'lottie-web',
-          replacement: new URL('./src/__mocks__/lottie-web.ts', import.meta.url).pathname,
-        },
-        {
           find: 'html2canvas',
           replacement: new URL('./src/__mocks__/html2canvas.ts', import.meta.url).pathname,
         },

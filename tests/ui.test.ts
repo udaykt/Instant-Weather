@@ -129,7 +129,7 @@ describe('renderForecast', () => {
     };
     renderForecast(mockWeather, currentConditions);
     expect(document.querySelector('.humidity-value')?.textContent).toBe('70%');
-    expect(document.querySelector('.wind-value')?.textContent).toBe('15 kph W');
+    expect(document.querySelector('.wind-value')?.textContent).toBe('15 kph');
     expect(document.querySelector('.pressure-value')?.textContent).toBe('1012 mb');
   });
 
@@ -187,31 +187,16 @@ describe('renderForecast', () => {
 });
 
 describe('formatTemperature', () => {
-  beforeEach(setupDOM);
-
-  it('switches from C to F', () => {
-    const currentConditions: TemperatureState = {
-      temp_c: 18,
-      temp_f: 64,
-      feelslike_c: 16,
-      feelslike_f: 61,
-    };
-    formatTemperature('C', currentConditions);
-    expect(document.querySelector('.temperature-reading')?.textContent).toBe('64°');
-    expect(document.querySelector('.temperature-degree')?.textContent).toBe('F');
-    expect(document.querySelector('.temperature-real-feel')?.textContent).toBe('Feels like 61°F');
+  it('formats the Celsius reading', () => {
+    expect(formatTemperature(18, 64, 'C')).toBe('18°');
   });
 
-  it('switches from F back to C', () => {
-    const currentConditions: TemperatureState = {
-      temp_c: 18,
-      temp_f: 64,
-      feelslike_c: 16,
-      feelslike_f: 61,
-    };
-    formatTemperature('F', currentConditions);
-    expect(document.querySelector('.temperature-reading')?.textContent).toBe('18°');
-    expect(document.querySelector('.temperature-degree')?.textContent).toBe('C');
-    expect(document.querySelector('.temperature-real-feel')?.textContent).toBe('Feels like 16°C');
+  it('formats the Fahrenheit reading', () => {
+    expect(formatTemperature(18, 64, 'F')).toBe('64°');
+  });
+
+  it('rounds to the nearest whole degree', () => {
+    expect(formatTemperature(18.4, 63.6, 'C')).toBe('18°');
+    expect(formatTemperature(18.4, 63.6, 'F')).toBe('64°');
   });
 });

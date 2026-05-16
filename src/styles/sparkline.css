@@ -1,0 +1,128 @@
+/* ── Hourly sparkline (Feature 3) ───────────────────────────────────────── */
+.sparkline-section {
+  width: 100%;
+  max-width: 520px;
+  padding: var(--s-3) var(--s-4);
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  border-radius: var(--r-tile);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  transition:
+    background 0.9s ease,
+    border-color 0.9s ease;
+}
+
+.sparkline-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.sparkline-head .section-label {
+  margin-bottom: 0;
+}
+
+.sparkline-range {
+  font-family: Gilroy-Bold, sans-serif;
+  font-size: 11px;
+  color: var(--accent-dim);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.spark-max {
+  color: #fff;
+}
+.spark-sep {
+  opacity: 0.5;
+}
+
+.sparkline-plot {
+  position: relative;
+  width: 100%;
+  height: 52px;
+}
+
+.temp-sparkline {
+  width: 100%;
+  height: 52px;
+  display: block;
+  overflow: visible;
+}
+
+/* Current-hour marker — an HTML element so it stays a perfect circle
+   regardless of the sparkline's non-uniform SVG scaling. */
+.spark-dot {
+  position: absolute;
+  left: var(--dx, -100%);
+  top: var(--dy, -100%);
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 3px hsl(var(--cond-hue) 90% 70% / 0.25),
+    0 0 8px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Hover/touch guide line + tooltip */
+.spark-cursor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--cx, -100%);
+  width: 1px;
+  background: rgba(255, 255, 255, 0.28);
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.spark-tip {
+  position: absolute;
+  left: var(--cx, -100%);
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  padding: 4px 9px;
+  background: rgba(10, 14, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--r-pill);
+  font-family: Gilroy-Bold, sans-serif;
+  font-size: 11px;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.sparkline-plot.is-hover .spark-cursor,
+.sparkline-plot.is-hover .spark-tip {
+  opacity: 1;
+}
+
+.sparkline-axis {
+  display: flex;
+  justify-content: space-between;
+}
+.spark-x {
+  font-family: Gilroy-Medium, sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+}
+.spark-x-mid {
+  transform: translateX(-50%);
+  margin-left: 50%;
+}
+.spark-x-end {
+  text-align: right;
+}

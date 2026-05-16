@@ -33,8 +33,23 @@ function setCache<T>(key: string, data: T): void {
   } catch {}
 }
 
+/** Thrown when every key in the rotation pool has hit its quota. */
+export class QuotaExhaustedError extends Error {
+  constructor(message = 'All API keys exhausted. Please try again later.') {
+    super(message);
+    this.name = 'QuotaExhaustedError';
+  }
+}
+
 async function fetchRaw(url: string): Promise<unknown> {
   const res = await fetch(url);
+  if (res.status === 429) {
+    const body = (await res.json().catch(() => null)) as {
+      error?: string;
+      message?: string;
+    } | null;
+    if (body?.error === 'quota_exhausted') throw new QuotaExhaustedError(body.message);
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
