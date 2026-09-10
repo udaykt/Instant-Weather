@@ -1,0 +1,4 @@
+# Keep shell scripts LF so git hooks run regardless of the OS they were
+# committed from. CRLF in a POSIX sh script breaks it with "\r" errors.
+.githooks/** text eol=lf
+*.sh text eol=lf

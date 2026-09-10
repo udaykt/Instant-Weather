@@ -1,0 +1,15 @@
+#!/bin/sh
+# Strip AI / tool attribution from commit messages before they are written.
+# Portable: no GNU-only sed flags. Covers Co-Authored-By trailers pointing at
+# Claude or the Anthropic no-reply address, "Generated with Claude Code" lines,
+# and Claude-Session trailers.
+f="$1"
+t="${f}.strip.$$"
+
+sed -E \
+  -e '/^[Cc]o-[Aa]uthored-[Bb]y:.*[Cc]laude/d' \
+  -e '/^[Cc]o-[Aa]uthored-[Bb]y:.*<noreply@anthropic\.com>/d' \
+  -e '/[Gg]enerated with .*[Cc]laude [Cc]ode/d' \
+  -e '/^[Cc]laude-[Ss]ession:/d' \
+  -e '/^🤖 [Gg]enerated with/d' \
+  "$f" > "$t" && mv "$t" "$f"

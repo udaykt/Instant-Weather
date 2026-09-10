@@ -10,7 +10,8 @@ build/
 *.tmp
 
 # Tooling / editor
-.claude/
+.claude/settings.local.json
+.claude/*.local.json
 .wrangler/
 
 # Playwright
