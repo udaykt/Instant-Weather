@@ -2,6 +2,13 @@
   "name": "instant-weather",
   "version": "2.0.0",
   "description": "Real-time weather app with 5-day forecast, AQI, and PWA support.",
+  "author": "Uday Kanth Tirukkovaluri <t.uday.kanth12@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://instant-weather.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/udaykt/Instant-Weather.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

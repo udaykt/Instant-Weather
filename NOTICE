@@ -1,0 +1,40 @@
+Instant Weather
+Copyright (c) 2026 Uday Kanth Tirukkovaluri <t.uday.kanth12@gmail.com>
+
+================================================================================
+What the MIT License covers
+================================================================================
+
+The LICENSE file (MIT) applies to the SOURCE CODE of this repository: the
+application code, Cloudflare Pages Functions, configuration, and build scripts.
+You may use, copy, modify, and redistribute the code under those terms, provided
+the copyright notice and the MIT permission notice are retained.
+
+================================================================================
+What is NOT licensed for reuse (All Rights Reserved)
+================================================================================
+
+The following are the author's original work and are NOT granted under the MIT
+License or any other licence. All rights are reserved. They may not be copied,
+reproduced, redistributed, or used to represent another project or product
+without the author's prior written permission:
+
+  1. The name "Instant Weather" and any associated logos and wordmarks
+     (e.g. public/assets/images/sun.png, public/logo*, public/favicon*).
+  2. The visual and interaction design: the condition-reactive aurora theme,
+     colour system, glassmorphism treatment, layout, and animation choices.
+  3. Written content: marketing copy, in-app microcopy, and documentation prose
+     (README.md and any docs).
+  4. Image and media assets under public/ (including og.png and background
+     imagery).
+
+Third-party fonts (the Gilroy family under public/assets/fonts/) are covered by
+their own licences and are not the author's to relicense. Weather data is
+provided by WeatherAPI.com under their terms.
+
+================================================================================
+Contact
+================================================================================
+
+For permission to use anything in the "All Rights Reserved" list above, or for
+licensing enquiries, contact: t.uday.kanth12@gmail.com

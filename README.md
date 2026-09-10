@@ -133,4 +133,9 @@ API credentials are injected at the edge and never exposed to the browser.
 
 ## License
 
-MIT © Uday — see [LICENSE](LICENSE).
+**Source code** — MIT © 2026 Uday Kanth Tirukkovaluri. See [LICENSE](LICENSE).
+
+**Name, visual design, copy, and image assets** — All Rights Reserved. The MIT
+grant covers the code only; you may not reuse the "Instant Weather" name, the
+aurora theme and visual design, the written copy, or the images under `public/`
+to represent another project without written permission. See [NOTICE](NOTICE).

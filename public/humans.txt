@@ -1,0 +1,21 @@
+/* TEAM */
+
+  Developer & Designer: Uday Kanth Tirukkovaluri
+  Contact: t.uday.kanth12 [at] gmail.com
+  GitHub: github.com/udaykt
+  From: India
+
+/* SITE */
+
+  Last update: 2026/09/10
+  Live: https://instant-weather.pages.dev
+  Language: TypeScript 5 (strict)
+  Build: Vite 5 + vite-plugin-pwa
+  Styling: Vanilla CSS — @property design tokens, glassmorphism
+  Data: WeatherAPI.com, proxied through Cloudflare Pages Functions
+  Hosting: Cloudflare Pages + edge Functions
+
+/* LICENCE */
+
+  Source code: MIT (see /LICENSE)
+  Name, design, copy and image assets: All Rights Reserved (see /NOTICE)
